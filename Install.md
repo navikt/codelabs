@@ -6,8 +6,8 @@ NAVIKT codelabs is based on google codelabs and provide a guided, tutorial, hand
 
 ## Install 
 
-* Install claat - see https://github.com/googlecodelabs/tools/tree/master/claat 
-* Write a codelab! See https://github.com/googlecodelabs for instructions
+* Install claat - see [https://github.com/googlecodelabs/tools/tree/master/claat](https://github.com/googlecodelabs/tools/tree/master/claat)
+* Write a codelab! See [https://github.com/googlecodelabs](https://github.com/googlecodelabs/tools/tree/master/claat) for instructions
 
 ## Generate content & push codelab to github pages. 
 
