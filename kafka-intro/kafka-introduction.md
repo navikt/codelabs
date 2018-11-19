@@ -1,6 +1,6 @@
 author: Geir André Lund
 summary: Kafka-clients introduction codelab. 
-id: 2
+id: kafka-clients-intro-v1
 categories: kafka,java,event-driven
 environments: Java
 status: draft
