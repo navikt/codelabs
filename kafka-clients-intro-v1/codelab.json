@@ -2,7 +2,7 @@
   "environment": "web",
   "source": "kafka-introduction.md",
   "format": "html",
-  "prefix": "../../",
+  "prefix": "../",
   "mainga": "UA-49880327-14",
   "updated": "2018-11-19T12:01:20+01:00",
   "id": "kafka-clients-intro-v1",
