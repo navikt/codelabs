@@ -1,0 +1,27 @@
+{
+  "environment": "web",
+  "source": "kafka-introduction.md",
+  "format": "html",
+  "prefix": "../../",
+  "mainga": "UA-49880327-14",
+  "updated": "2018-11-19T12:01:20+01:00",
+  "id": "kafka-clients-intro-v1",
+  "duration": 7,
+  "title": "Kafka-clients introduction",
+  "author": "Geir André Lund",
+  "summary": "Kafka-clients introduction codelab.",
+  "theme": "",
+  "status": [
+    "draft"
+  ],
+  "category": [
+    "kafka",
+    "java",
+    "event-driven"
+  ],
+  "tags": [
+    "java"
+  ],
+  "ga": "0",
+  "url": "kafka-clients-intro-v1"
+}

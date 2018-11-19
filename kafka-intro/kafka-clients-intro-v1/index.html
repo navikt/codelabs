@@ -1,0 +1,95 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Kafka-clients introduction</title>
+  <script src="../../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../../elements/codelab.html">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <style is="custom-style">
+    body {
+      font-family: "Roboto",sans-serif;
+      background: var(--google-codelab-background, #F8F9FA);
+    }
+  </style>
+  
+</head>
+<body unresolved class="fullbleed">
+
+  <google-codelab title="Kafka-clients introduction"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="Overview of the tutorial" duration="5">
+        <p>This tutorial shows you how to create a Kafka consumer and producer</p>
+<p>Prerequisites:</p>
+<ul>
+<li>Git installed - see <a href="https://git-scm.com/" target="_blank">https://git-scm.com/</a> for instructions.</li>
+<li>Java SKD installed - see <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank">https://www.oracle.com/technetwork/java/javase/downloads/index.html</a> for instructions.</li>
+<li>Docker - see <a href="https://www.docker.com/get-started" target="_blank">https://www.docker.com/get-started</a> for instructions.</li>
+<li>And IDE installed - recommend <a href="https://www.jetbrains.com/idea/download" target="_blank">IntelliJ Idea</a> for this codelab</li>
+</ul>
+<aside class="special"><p>We recommend you to have Git, Java SE SDK, IDE and Docker already installed on your machine.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Set up" duration="2">
+        <p>Download the <a href="https://github.com/navikt" target="_blank">project</a> with git. (Assume that git is installed on you machine - )</p>
+<pre><code>git clone https://github.com/navikt/codelabs/kafka-intro.git
+</code></pre>
+<aside class="special"><p>This will appear in a positive info box.</p>
+</aside>
+<aside class="warning"><p>This will appear in a negative info box.</p>
+</aside>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create a consumer" duration="0">
+        
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create a producer" duration="0">
+        
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-49880327-14', 'auto');
+
+    (function() {
+      var gaCodelab = '0';
+      if (gaCodelab) {
+        ga('create', gaCodelab, 'auto', {name: 'codelab'});
+      }
+
+      var gaView;
+      var parts = location.search.substring(1).split('&');
+      for (var i = 0; i < parts.length; i++) {
+        var param = parts[i].split('=');
+        if (param[0] === 'viewga') {
+          gaView = param[1];
+          break;
+        }
+      }
+      if (gaView && gaView !== gaCodelab) {
+        ga('create', gaView, 'auto', {name: 'view'});
+      }
+    })();
+  </script>
+
+</body>
+</html>
