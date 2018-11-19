@@ -2,5 +2,5 @@
 Codelabs for NAVIKT - work in progress! 
 
 
-1.  [https://navikt.github.io/codelabs/kafka-clients-intro-v1](Kafka-clients introduction)
+1.  [Kafka clients introduction](https://navikt.github.io/codelabs/kafka-intro/kafka-clients-intro-v1)
 
