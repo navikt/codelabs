@@ -1,6 +1,6 @@
 {
   "environment": "web",
-  "source": "kafka-introduction.md",
+  "source": "kafka-intro/kafka-introduction.md",
   "format": "html",
   "prefix": "../../",
   "mainga": "UA-49880327-14",
