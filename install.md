@@ -12,9 +12,3 @@ NAVIKT codelabs is based on [google codelabs](https://codelabs.developers.google
 ## Generate content & push codelab to github pages. 
 
 `claat export --prefix "../" -o docs codelab-name.md` and commit & push files to master
-
-
-
-
-
-
