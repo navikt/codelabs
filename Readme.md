@@ -7,7 +7,7 @@
 ## Install 
 
 * Install claat - see [https://github.com/googlecodelabs/tools/tree/master/claat](https://github.com/googlecodelabs/tools/tree/master/claat)
-* Write a codelab! See [https://github.com/googlecodelabs](https://github.com/googlecodelabs/tools/tree/master/claat) for instructions
+* Write a codelab! See [https://github.com/googlecodelabs](https://github.com/googlecodelabs/) for instructions
 
 ## Generate content from markdown & push codelab to github pages. 
 
