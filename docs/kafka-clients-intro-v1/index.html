@@ -24,8 +24,8 @@
                   environment="web"
                   feedback-link="">
     
-      <google-codelab-step label="Overview of the tutorial" duration="5">
-        <p>This tutorial shows you how to create a Kafka consumer and producer</p>
+      <google-codelab-step label="Overview of the tutorial" duration="300">
+        <p>This tutorial shows you how to create a Kafka consumer and -producer using kafka-clients java library</p>
 <p>Prerequisites:</p>
 <ul>
 <li>Java SKD installed - see <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank">https://www.oracle.com/technetwork/java/javase/downloads/index.html</a> for instructions.</li>
@@ -40,23 +40,34 @@
       </google-codelab-step>
     
       <google-codelab-step label="Set up" duration="2">
-        <p><a href="https://github.com/navikt.master.zip" target="_blank">Download functional examples</a>.<br>(Assume that git is installed on you machine - )</p>
-<pre><code>git clone https://github.com/navikt/codelabs/kafka-intro.git
+        <h2>Java and project setup</h2>
+<p><a href="https://github.com/navikt/codelab-kafka-clients/archive/master.zip" target="_blank">Download project</a></p>
+<p>Extract the project to an directory. Alternative, use git to clone the project.</p>
+<pre><code>git clone https://github.com/navikt/codelab-kafka-clients.git
 </code></pre>
-<aside class="special"><p>This will appear in a positive info box.</p>
-</aside>
-<aside class="warning"><p>This will appear in a negative info box.</p>
-</aside>
+<p>Navigate to the kafka-clients directory underneath project root, run gradle:</p>
+<pre><code>$ cd cd &lt;project_root&gt;/kafka-clients
+$ ./gradlew build
+</code></pre>
+<p>If everything is set up you should see</p>
+<pre><code>BUILD SUCCESSFUL in Xs
+</code></pre>
+<h2>Docker</h2>
+<p>In the kafka-clients directory, there is a <code>docker-compose.yml</code> file navigate to the file and run docker-compose:</p>
+<pre><code>$  cd &lt;project_root&gt;/kafka-clients
+$ docker-compose up
+</code></pre>
+<p>This should start a kafka and zookeeper instance locally.</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Create a consumer" duration="0">
+      <google-codelab-step label="consumer" duration="0">
         
 
       </google-codelab-step>
     
-      <google-codelab-step label="Create a producer" duration="0">
+      <google-codelab-step label="Producer" duration="0">
         
 
       </google-codelab-step>

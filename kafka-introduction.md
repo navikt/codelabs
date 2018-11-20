@@ -10,9 +10,9 @@ analytics account: 0
 # Kafka-clients introduction 
 
 ## Overview of the tutorial
-Duration: 5:00 
+Duration: 5:00~10:00
 
-This tutorial shows you how to create a Kafka consumer and producer 
+This tutorial shows you how to create a Kafka consumer and -producer using kafka-clients java library
 
 Prerequisites: 
 
@@ -24,29 +24,48 @@ Prerequisites:
 Positive
 : We recommend you to have Git, Java SE SDK, IDE and Docker already installed on your machine.
 
-
 ## Set up
 Duration: 2:00
 
-[Download functional examples](https://github.com/navikt.master.zip). 
-(Assume that git is installed on you machine - )
+### Java and project setup
 
+[Download project](https://github.com/navikt/codelab-kafka-clients/archive/master.zip)
+
+Extract the project to an directory. Alternative, use git to clone the project. 
 ``` bash
-git clone https://github.com/navikt/codelabs/kafka-intro.git
+git clone https://github.com/navikt/codelab-kafka-clients.git
 ```
 
-Positive
-: This will appear in a positive info box.
+Navigate to the kafka-clients directory underneath project root, run gradle: 
 
-Negative
-: This will appear in a negative info box.
+``` bash
+$ cd cd <project_root>/kafka-clients
+$ ./gradlew build
+``` 
+
+If everything is set up you should see 
+
+``` bash
+BUILD SUCCESSFUL in Xs
+```
+
+### Docker
+
+In the kafka-clients directory, there is a `docker-compose.yml` file navigate to the file and run docker-compose:
+
+``` bash
+$  cd <project_root>/kafka-clients
+$ docker-compose up
+```
+
+This should start a kafka and zookeeper instance locally. 
 
 
-## Create a consumer 
+## consumer 
 
 
 
-## Create a producer
+## Producer
 
 
 
