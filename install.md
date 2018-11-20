@@ -1,6 +1,6 @@
 # WHAT
 
-NAVIKT codelabs is based on google codelabs and provide a guided, tutorial, hands-on coding experience.
+NAVIKT codelabs is based on [google codelabs](https://codelabs.developers.google.com/) and provide a guided, tutorial, hands-on coding experience.
 
 # HOW
 
@@ -11,7 +11,7 @@ NAVIKT codelabs is based on google codelabs and provide a guided, tutorial, hand
 
 ## Generate content & push codelab to github pages. 
 
-`claat export -prefix "../" codelab-name.md` and commit & push files to master
+`claat export --prefix "../" -o docs codelab-name.md` and commit & push files to master
 
 
 
