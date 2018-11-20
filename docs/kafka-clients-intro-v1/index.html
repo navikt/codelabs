@@ -24,9 +24,9 @@
                   environment="web"
                   feedback-link="">
     
-      <google-codelab-step label="Overview of the tutorial" duration="300">
+      <google-codelab-step label="Overview of the tutorial" duration="5">
         <p>This tutorial shows you how to create a Kafka consumer and -producer using kafka-clients java library</p>
-<p>Prerequisites:</p>
+<h2>Prerequisites</h2>
 <ul>
 <li>Java SKD installed - see <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank">https://www.oracle.com/technetwork/java/javase/downloads/index.html</a> for instructions.</li>
 <li>Docker - see <a href="https://www.docker.com/get-started" target="_blank">https://www.docker.com/get-started</a> for instructions.</li>
@@ -39,7 +39,7 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Set up" duration="2">
+      <google-codelab-step label="Set up" duration="5">
         <h2>Java and project setup</h2>
 <p><a href="https://github.com/navikt/codelab-kafka-clients/archive/master.zip" target="_blank">Download project</a></p>
 <p>Extract the project to an directory. Alternative, use git to clone the project.</p>
@@ -57,13 +57,26 @@ $ ./gradlew build
 <pre><code>$  cd &lt;project_root&gt;/kafka-clients
 $ docker-compose up
 </code></pre>
-<p>This should start a kafka and zookeeper instance locally.</p>
+<p>This should start a Kafka and a zookeeper instance locally.</p>
+<aside class="warning"><p>Known docker issues on Mac/Windows. See https://github.com/confluentinc/cp-docker-images#known-issues-on-macwindows</p>
+</aside>
+<p>Mac:<br>Add <code>kafka</code> as host to <code>/etc/host</code></p>
+<pre><code>$ sudo nano /etc/host
+</code></pre>
+<p>add <code>kafka</code> host</p>
+<pre><code>127.0.0.1	localhost kafka
+</code></pre>
+<p>Windows:</p>
+<p>TODO!</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="consumer" duration="0">
-        
+      <google-codelab-step label="Fizz-buzz" duration="0">
+        <p>Create an consumer thats consume the <code>FizzBuzzNumber</code> topic, based on the number calculate wether or not that number is a [Fizz-Buzz][1] candidate and produce a message to Kafka with topic <code>FizzBuzzAnswer</code>with the answer. The answer must be complient to json file:</p>
+<p>TODO</p>
+<p>[1]: Fizz-Buzz test - Write a program that prints the numbers from 1 to 100. But for multiples of three print &#34;Fizz&#34; instead of the number and for the multiples of five print &#34;Buzz&#34;. For numbers which are multiples of both three and five print &#34;FizzBuzz&#34;<br>Ref <a href="https://en.wikipedia.org/wiki/Fizz_buzz" target="_blank">https://en.wikipedia.org/wiki/Fizz_buzz</a></p>
+
 
       </google-codelab-step>
     
