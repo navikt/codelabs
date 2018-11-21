@@ -24,10 +24,21 @@
                   environment="web"
                   feedback-link="">
     
+      <google-codelab-step label="About this tutorial" duration="0">
+        <p>This tutorial walks you through Kubernetes basics and will introduce you to the features the <a href="https://nais.io" target="_blank">NAIS</a> platform provides you.</p>
+<h2>About Kubernetes</h2>
+<p><a href="https://kubernetes.io" target="_blank">Kubernetes</a> is a system for deploying and managing conterinized applications. Not familiar with containers? Don&#39;t worry, you will learn about it in this tutorial as well.</p>
+<h2>About NAIS</h2>
+<p>NAIS is <a href="https://nav.no" target="_blank">NAV</a>&#39;s application infrastructure platform built to increase development speed by providing our developers at NAV with the best possible tools to develop and run their applications. The platform based on Kubernetes and provides additional tools and components that our developers might need.</p>
+
+
+      </google-codelab-step>
+    
       <google-codelab-step label="Prerequisites" duration="3">
         <ul>
-<li>You must install the <code>gcloud-sdk</code> locally on your machine</li>
+<li>You must install the <a href="https://cloud.google.com/sdk/docs/downloads-interactive" target="_blank">gcloud-sdk</a> locally on your machine</li>
 <li>Docker - see https://www.docker.com/get-started for instructions.</li>
+<li>An account on a Docker registry, e.g. https://dockerhub.com</li>
 <li>Clone the <a href="https://github.com/nais/nais-tutorial" target="_blank">nais-tutorial</a> repository</li>
 </ul>
 
@@ -35,8 +46,58 @@
       </google-codelab-step>
     
       <google-codelab-step label="Set up gcloud" duration="2">
-        <p>...</p>
+        <p>Set up the Google Cloud SDK tool:</p>
+<pre><code>gcloud init
+</code></pre>
+<p>When asked about whether to create a new project, say no.</p>
 
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Docker" duration="10">
+        <p>We will in this section create a Docker image for our application, but first, lets take a look at Docker.</p>
+<h2>About Docker</h2>
+<p>Docker is a container technology that we can use to wrap an application into an image.</p>
+<p>Take a look at the repository <code>nais-tutorial</code>. This contains source code for a small example application. As you can see, it also contains a file <code>Dockerfile</code>. This file contains instructions on how to create a Docker image for the application.</p>
+<p>More info........</p>
+<h2>About the Dockerfile</h2>
+<h2>Create a Docker image</h2>
+<p>In the folder <code>nais-tutorial</code> run this command to build a Docker image, remember to insert your username:</p>
+<pre><code>docker build -t YOUR_USERNAME/nais-demoapp .
+</code></pre>
+<p>This will create an image of the application. To list your local images:</p>
+<pre><code>docker images
+</code></pre>
+<p>You can test the image locally by running:</p>
+<pre><code>docker run -d -p 8080 YOUR_USERNAME/nais-demoapp
+</code></pre>
+<p>This will spin up a container based on your image.<br>To view the application in your browser, you need to find out which port it is mapped to:</p>
+<pre><code>docker ps
+</code></pre>
+<p>Note the port mapping (<code>0.0.0.0:12345(random port) -&gt; 8080</code>) and visit <code>localhost:INSERT_RANDOM_PORT</code> in your most loved browser. You should see the text &#34;Hello, world!&#34;</p>
+<h2>Push to Docker registry</h2>
+<h3>Log into Dockerhub</h3>
+<p>....</p>
+<p>We need the docker image to be available on the internet in order to deploy it to Kubernetes. Push it to your Docker registry:</p>
+<pre><code>docker push YOUR_USERNAME/nais-demoapp
+</code></pre>
+<p>You can see that it pushes your image in layers. (INSERT INFO ON LAYERS)</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Access the Kubernetes cluster" duration="0">
+        
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Kubernetes deployment" duration="0">
+        
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Kubernetes service" duration="0">
+        
 
       </google-codelab-step>
     
