@@ -61,38 +61,42 @@ $ docker-compose up
 This should start a Kafka and a zookeeper instance locally.  
 
 Negative
-: Known docker issues on Mac/Windows. See https://github.com/confluentinc/cp-docker-images#known-issues-on-macwindows
+: Known docker issues on Mac/Windows. See [https://github.com/confluentinc/cp-docker-images#known-issues-on-macwindows](https://github.com/confluentinc/cp-docker-images#known-issues-on-macwindows )
 
-Mac: 
+Fix Mac host issue: 
 Add `kafka` as host to `/etc/host`
 
 ```bash
-$ sudo nano /etc/host
-```
-
-add `kafka` host
-
-```bash
+$ sudo nano /etc/host 
+$ 
+...
 127.0.0.1	localhost kafka
+...
 ```
 
-Windows: 
+(or use your favorite editor)
+
+Fix Windows host issue: 
 
 TODO!
 
 
-## Fizz-buzz 
+## Fizz-buzz game with Kafka
+Duration: 35:00
 
-Create an consumer thats consume the `FizzBuzzNumber` topic, based on the number calculate wether or not that number is a [Fizz-Buzz][1] candidate and produce a message to Kafka with topic ```FizzBuzzAnswer```with the answer. The answer must be complient to json file: 
+Create an consumer thats consume the `FizzBuzzNumberEntered` topic (See FizzBuzzCandidateProducer.java in the project), based on the number, calculate wether or not that number is a ["Fizz-Buzz" number](https://en.wikipedia.org/wiki/Fizz_buzz) candidate and produce a message to Kafka with topic `FizzBuzzAnswered` with the answer. The answer must be compliant to json file: 
 
-TODO  
+```json
+{
+  "answer": "FizzBuzz", // - "FizzBuzz", "Fizz" or "Buzz"
+  "candidate" : 15, // Number entered
+  "group_id" : "A-team" // Identicator of the team 
+}
+```
 
-[1]: Fizz-Buzz test - Write a program that prints the numbers from 1 to 100. But for multiples of three print “Fizz” instead of the number and for the multiples of five print “Buzz”. For numbers which are multiples of both three and five print “FizzBuzz"
+The solution should only produce `FizzBuzzAnswered` topic on number that meets the Fizz-Buzz criteria. 
+
+• Fizz-Buzz test - Write a program that prints the numbers from 1 to 100. But for multiples of three print “Fizz” instead of the number and for the multiples of five print “Buzz”. For numbers which are multiples of both three and five print “FizzBuzz"
 Ref [https://en.wikipedia.org/wiki/Fizz_buzz](https://en.wikipedia.org/wiki/Fizz_buzz)
-
-
-
-## Producer
-
 
 

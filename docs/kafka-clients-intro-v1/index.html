@@ -58,30 +58,33 @@ $ ./gradlew build
 $ docker-compose up
 </code></pre>
 <p>This should start a Kafka and a zookeeper instance locally.</p>
-<aside class="warning"><p>Known docker issues on Mac/Windows. See https://github.com/confluentinc/cp-docker-images#known-issues-on-macwindows</p>
+<aside class="warning"><p>Known docker issues on Mac/Windows. See <a href="https://github.com/confluentinc/cp-docker-images#known-issues-on-macwindows" target="_blank">https://github.com/confluentinc/cp-docker-images#known-issues-on-macwindows</a></p>
 </aside>
-<p>Mac:<br>Add <code>kafka</code> as host to <code>/etc/host</code></p>
-<pre><code>$ sudo nano /etc/host
+<p>Fix Mac host issue:<br>Add <code>kafka</code> as host to <code>/etc/host</code></p>
+<pre><code>$ sudo nano /etc/host 
+$ 
+...
+127.0.0.1	localhost kafka
+...
 </code></pre>
-<p>add <code>kafka</code> host</p>
-<pre><code>127.0.0.1	localhost kafka
-</code></pre>
-<p>Windows:</p>
+<p>(or use your favorite editor)</p>
+<p>Fix Windows host issue:</p>
 <p>TODO!</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Fizz-buzz" duration="0">
-        <p>Create an consumer thats consume the <code>FizzBuzzNumber</code> topic, based on the number calculate wether or not that number is a [Fizz-Buzz][1] candidate and produce a message to Kafka with topic <code>FizzBuzzAnswer</code>with the answer. The answer must be complient to json file:</p>
-<p>TODO</p>
-<p>[1]: Fizz-Buzz test - Write a program that prints the numbers from 1 to 100. But for multiples of three print &#34;Fizz&#34; instead of the number and for the multiples of five print &#34;Buzz&#34;. For numbers which are multiples of both three and five print &#34;FizzBuzz&#34;<br>Ref <a href="https://en.wikipedia.org/wiki/Fizz_buzz" target="_blank">https://en.wikipedia.org/wiki/Fizz_buzz</a></p>
+      <google-codelab-step label="Fizz-buzz game with Kafka" duration="35">
+        <p>Create an consumer thats consume the <code>FizzBuzzNumberEntered</code> topic (See FizzBuzzCandidateProducer.java in the project), based on the number, calculate wether or not that number is a <a href="https://en.wikipedia.org/wiki/Fizz_buzz" target="_blank">&#34;Fizz-Buzz&#34; number</a> candidate and produce a message to Kafka with topic <code>FizzBuzzAnswered</code> with the answer. The answer must be compliant to json file:</p>
+<pre><code>{
+  &#34;answer&#34;: &#34;FizzBuzz&#34;, // - &#34;FizzBuzz&#34;, &#34;Fizz&#34; or &#34;Buzz&#34;
+  &#34;candidate&#34; : 15, // Number entered
+  &#34;group_id&#34; : &#34;A-team&#34; // Identicator of the team 
+}
+</code></pre>
+<p>The solution should only produce <code>FizzBuzzAnswered</code> topic on number that meets the Fizz-Buzz criteria.</p>
+<p>• Fizz-Buzz test - Write a program that prints the numbers from 1 to 100. But for multiples of three print &#34;Fizz&#34; instead of the number and for the multiples of five print &#34;Buzz&#34;. For numbers which are multiples of both three and five print &#34;FizzBuzz&#34;<br>Ref <a href="https://en.wikipedia.org/wiki/Fizz_buzz" target="_blank">https://en.wikipedia.org/wiki/Fizz_buzz</a></p>
 
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Producer" duration="0">
-        
 
       </google-codelab-step>
     
