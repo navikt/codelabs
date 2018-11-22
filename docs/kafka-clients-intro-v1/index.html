@@ -75,11 +75,16 @@ $
       </google-codelab-step>
     
       <google-codelab-step label="Fizz-buzz game with Kafka" duration="35">
-        <p>Create an consumer thats consume the <code>FizzBuzzNumberEntered</code> topic (See FizzBuzzCandidateProducer.java in the project), based on the number, calculate wether or not that number is a <a href="https://en.wikipedia.org/wiki/Fizz_buzz" target="_blank">&#34;Fizz-Buzz&#34; number</a> candidate and produce a message to Kafka with topic <code>FizzBuzzAnswered</code> with the answer. The answer must be compliant to json file:</p>
+        <ol type="1">
+<li>Create an consumer thats consume the <code>FizzBuzzNumberEntered</code> topic (See FizzBuzzCandidateProducer.java in the project).</li>
+<li>Based on the number in <code>FizzBuzzNumberEntered</code>, calculate wether or not that number is a <a href="https://en.wikipedia.org/wiki/Fizz_buzz" target="_blank">&#34;Fizz-Buzz&#34; number</a> candidate and</li>
+<li>produce a message to Kafka with topic <code>FizzBuzzAnswered</code> with the answer.</li>
+</ol>
+<p>The answer must be compliant to json file:</p>
 <pre><code>{
   &#34;answer&#34;: &#34;FizzBuzz&#34;, // - &#34;FizzBuzz&#34;, &#34;Fizz&#34; or &#34;Buzz&#34;
   &#34;candidate&#34; : 15, // Number entered
-  &#34;group_id&#34; : &#34;A-team&#34; // Identicator of the team 
+  &#34;groupId&#34; : &#34;A-team&#34; // Identicator of the team 
 }
 </code></pre>
 <p>The solution should only produce <code>FizzBuzzAnswered</code> topic on number that meets the Fizz-Buzz criteria.</p>

@@ -84,13 +84,17 @@ TODO!
 ## Fizz-buzz game with Kafka
 Duration: 35:00
 
-Create an consumer thats consume the `FizzBuzzNumberEntered` topic (See FizzBuzzCandidateProducer.java in the project), based on the number, calculate wether or not that number is a ["Fizz-Buzz" number](https://en.wikipedia.org/wiki/Fizz_buzz) candidate and produce a message to Kafka with topic `FizzBuzzAnswered` with the answer. The answer must be compliant to json file: 
+1. Create an consumer thats consume the `FizzBuzzNumberEntered` topic (See FizzBuzzCandidateProducer.java in the project). 
+2. Based on the number in `FizzBuzzNumberEntered`, calculate wether or not that number is a ["Fizz-Buzz" number](https://en.wikipedia.org/wiki/Fizz_buzz) candidate and 
+3. produce a message to Kafka with topic `FizzBuzzAnswered` with the answer. 
+
+The answer must be compliant to json file: 
 
 ```json
 {
   "answer": "FizzBuzz", // - "FizzBuzz", "Fizz" or "Buzz"
   "candidate" : 15, // Number entered
-  "group_id" : "A-team" // Identicator of the team 
+  "groupId" : "A-team" // Identicator of the team 
 }
 ```
 
@@ -98,5 +102,7 @@ The solution should only produce `FizzBuzzAnswered` topic on number that meets t
 
 • Fizz-Buzz test - Write a program that prints the numbers from 1 to 100. But for multiples of three print “Fizz” instead of the number and for the multiples of five print “Buzz”. For numbers which are multiples of both three and five print “FizzBuzz"
 Ref [https://en.wikipedia.org/wiki/Fizz_buzz](https://en.wikipedia.org/wiki/Fizz_buzz)
+
+
 
 
