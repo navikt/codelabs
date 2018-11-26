@@ -20,8 +20,9 @@ NAIS is [NAV](https://nav.no)'s application infrastructure platform built to inc
 Duration: 3:00
 
 - You must install the [gcloud-sdk](https://cloud.google.com/sdk/docs/downloads-interactive) locally on your machine
-- Docker - see https://www.docker.com/get-started for instructions.
+- Install Docker - see https://www.docker.com/get-started for instructions.
 - An account on a Docker registry, e.g. https://dockerhub.com
+- Access to a Kubernetes cluster on Google Cloud Platform
 - Clone the [nais-tutorial](https://github.com/nais/nais-tutorial) repository
 
 ## Set up gcloud
@@ -95,7 +96,55 @@ docker push YOUR_USERNAME/nais-demoapp
 You can see that it pushes your image in layers. (INSERT INFO ON LAYERS)
 
 
-## Access the Kubernetes cluster
+## Kubernetes
+
+Now that we have made our Docker image available on the web, the time has come to take a look at Kubernetes. Out of the box, Kubernetes will manage your Docker containers, keep track of whether they are healthy or not and how to reach them. In this section, we will deploy our container on a Kubernetes cluster.
+
+### Kubectl
+
+We need to install the Kubernetes command line tool `kubectl`. If you have installed it, skip this step.
+
+You can install `kubectl` using the instructions on the [Kubernetes documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl) or install through the `gcloud` tool you installed in the first section: 
+
+```
+gcloud components install kubectl
+```
+
+
+### Access
+
+To deploy to the Kubernetes cluster, you need access:
+
+```
+gcloud container clusters get-credentials CLUSTER_NAME --zone europe/north1-a --project PROJECT_NAME --account YOUR_EMAIL
+```
+
+This command will authenticate you against the Kubernetes cluster CLUSTER_NAME.
+Check that you're authenticated by listing services in the cluster:
+
+```
+kubectl get service
+```
+
+It might not output anything, but as long as it doesn't give an error, you are all good.
+
+The command writes to a config file, default `$HOME/.kube/config`, you can take a look at it if you're curious.
+
+### Run your container
+
+You can run your container with this command:
+
+```
+kubectl run YOUR_USERNAME/nais-demoapp
+```
+
+This will create your container in a Kubernetes resource that we call pod. Lets take a look at it:
+
+```
+kubectl get pods
+```
+
+Pods are Kubernetes resources that mainly contain one or more containers, along with an internal IP and specifications on how to run the container(s). The pod we now created only contain one container. If your application is using a proxy, you might want to specify several containers in one pod.
 
 ## Kubernetes deployment
 
