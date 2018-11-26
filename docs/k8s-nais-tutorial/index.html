@@ -37,8 +37,9 @@
       <google-codelab-step label="Prerequisites" duration="3">
         <ul>
 <li>You must install the <a href="https://cloud.google.com/sdk/docs/downloads-interactive" target="_blank">gcloud-sdk</a> locally on your machine</li>
-<li>Docker - see https://www.docker.com/get-started for instructions.</li>
+<li>Install Docker - see https://www.docker.com/get-started for instructions.</li>
 <li>An account on a Docker registry, e.g. https://dockerhub.com</li>
+<li>Access to a Kubernetes cluster on Google Cloud Platform</li>
 <li>Clone the <a href="https://github.com/nais/nais-tutorial" target="_blank">nais-tutorial</a> repository</li>
 </ul>
 
@@ -86,8 +87,31 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Access the Kubernetes cluster" duration="0">
-        
+      <google-codelab-step label="Kubernetes" duration="0">
+        <p>Now that we have made our Docker image available on the web, the time has come to take a look at Kubernetes. Out of the box, Kubernetes will manage your Docker containers, keep track of whether they are healthy or not and how to reach them. In this section, we will deploy our container on a Kubernetes cluster.</p>
+<h2>Kubectl</h2>
+<p>We need to install the Kubernetes command line tool <code>kubectl</code>. If you have installed it, skip this step.</p>
+<p>You can install <code>kubectl</code> using the instructions on the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl" target="_blank">Kubernetes documentation</a> or install through the <code>gcloud</code> tool you installed in the first section:</p>
+<pre><code>gcloud components install kubectl
+</code></pre>
+<h2>Access</h2>
+<p>To deploy to the Kubernetes cluster, you need access:</p>
+<pre><code>gcloud container clusters get-credentials CLUSTER_NAME --zone europe/north1-a --project PROJECT_NAME --account YOUR_EMAIL
+</code></pre>
+<p>This command will authenticate you against the Kubernetes cluster CLUSTER_NAME.<br>Check that you&#39;re authenticated by listing services in the cluster:</p>
+<pre><code>kubectl get service
+</code></pre>
+<p>It might not output anything, but as long as it doesn&#39;t give an error, you are all good.</p>
+<p>The command writes to a config file, default <code>$HOME/.kube/config</code>, you can take a look at it if you&#39;re curious.</p>
+<h2>Run your container</h2>
+<p>You can run your container with this command:</p>
+<pre><code>kubectl run YOUR_USERNAME/nais-demoapp
+</code></pre>
+<p>This will create your container in a Kubernetes resource that we call pod. Lets take a look at it:</p>
+<pre><code>kubectl get pods
+</code></pre>
+<p>Pods are Kubernetes resources that mainly contain one or more containers, along with an internal IP and specifications on how to run the container(s). The pod we now created only contain one container. If your application is using a proxy, you might want to specify several containers in one pod.</p>
+
 
       </google-codelab-step>
     
