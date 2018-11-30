@@ -2,7 +2,7 @@
 
 [NAVIKT codelabs](https://navikt.github.io/codelabs/) is based on [google codelabs](https://codelabs.developers.google.com/) and provide a guided, tutorial, hands-on coding experience.
 
-# HOW
+# HOWTO create codelabs
 
 ## Install 
 
