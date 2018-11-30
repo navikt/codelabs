@@ -25,16 +25,22 @@
                   feedback-link="">
     
       <google-codelab-step label="Overview of the tutorial" duration="5">
-        <p>This tutorial shows you how to create a Kafka consumer and -producer using kafka-clients java library</p>
+        <p>This tutorial shows you how to create a Kafka-consumer and -producer using <a href="http://kafka.apache.org/documentation/#api" target="_blank">kafka-clients</a> java library.</p>
+<p>What you&#39;ll learn</p>
+<ul>
+<li>Howto create an Kafka consumer that reads data from an Kafka-broker</li>
+<li>Howto create an Kafka producer that produce data from an Kafka-broker</li>
+</ul>
+<aside class="special"><p>This tutorial requires that you are familiar with Java programming language.</p>
+</aside>
 <h2>Prerequisites</h2>
 <ul>
+<li>Internet connectivity</li>
 <li>Java SKD installed - see <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank">https://www.oracle.com/technetwork/java/javase/downloads/index.html</a> for instructions.</li>
 <li>Docker - see <a href="https://www.docker.com/get-started" target="_blank">https://www.docker.com/get-started</a> for instructions.</li>
 <li>And IDE installed - recommend <a href="https://www.jetbrains.com/idea/download" target="_blank">IntelliJ Idea</a> for this codelab</li>
 <li>Optional: Git installed - see <a href="https://git-scm.com/" target="_blank">https://git-scm.com/</a> for instructions.</li>
 </ul>
-<aside class="special"><p>We recommend you to have Git, Java SE SDK, IDE and Docker already installed on your machine.</p>
-</aside>
 
 
       </google-codelab-step>
@@ -46,18 +52,18 @@
 <pre><code>git clone https://github.com/navikt/codelab-kafka-clients.git
 </code></pre>
 <p>Navigate to the kafka-clients directory underneath project root, run gradle:</p>
-<pre><code>$ cd cd &lt;project_root&gt;/kafka-clients
+<pre><code>$ cd kafka-clients
 $ ./gradlew build
 </code></pre>
 <p>If everything is set up you should see</p>
 <pre><code>BUILD SUCCESSFUL in Xs
 </code></pre>
 <h2>Docker</h2>
-<p>In the kafka-clients directory, there is a <code>docker-compose.yml</code> file navigate to the file and run docker-compose:</p>
-<pre><code>$  cd &lt;project_root&gt;/kafka-clients
-$ docker-compose up
+<p>In the kafka-clients directory, there is a <code>docker-compose.yml</code> file, navigate to the file and run docker-compose:</p>
+<pre><code>$  cd kafka-clients
+$ docker-compose up -d
 </code></pre>
-<p>This should start a Kafka and a zookeeper instance locally.</p>
+<p>This should start a Kafka environment locally.</p>
 <aside class="warning"><p>Known docker issues on Mac/Windows. See <a href="https://github.com/confluentinc/cp-docker-images#known-issues-on-macwindows" target="_blank">https://github.com/confluentinc/cp-docker-images#known-issues-on-macwindows</a></p>
 </aside>
 <p>Fix Mac host issue:<br>Add <code>kafka</code> as host to <code>/etc/host</code></p>
@@ -74,7 +80,7 @@ $
 
       </google-codelab-step>
     
-      <google-codelab-step label="Fizz-buzz game with Kafka" duration="35">
+      <google-codelab-step label="Fizz-buzz game with Kafka" duration="3">
         <ol type="1">
 <li>Create an consumer thats consume the <code>FizzBuzzNumberEntered</code> topic (See FizzBuzzCandidateProducer.java in the project).</li>
 <li>Based on the number in <code>FizzBuzzNumberEntered</code>, calculate wether or not that number is a <a href="https://en.wikipedia.org/wiki/Fizz_buzz" target="_blank">&#34;Fizz-Buzz&#34; number</a> candidate and</li>
@@ -89,6 +95,25 @@ $
 </code></pre>
 <p>The solution should only produce <code>FizzBuzzAnswered</code> topic on number that meets the Fizz-Buzz criteria.</p>
 <p>• Fizz-Buzz test - Write a program that prints the numbers from 1 to 100. But for multiples of three print &#34;Fizz&#34; instead of the number and for the multiples of five print &#34;Buzz&#34;. For numbers which are multiples of both three and five print &#34;FizzBuzz&#34;<br>Ref <a href="https://en.wikipedia.org/wiki/Fizz_buzz" target="_blank">https://en.wikipedia.org/wiki/Fizz_buzz</a></p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create an consumer" duration="5">
+        <ul>
+<li>In IntelliJ - Create a new Java file, give it a name (e.g. <code>FizzBuzzNumberEnteredConsumer.java</code>)</li>
+<li>We need to declare an <code>KafkaConsumer</code> and instantiate it;</li>
+</ul>
+<pre><code>public class FizzBuzzNumberEnteredConsumer {
+    private final KafkaConsumer&lt;String, String&gt; consumer;
+
+    public FizzBuzzNumberEnteredConsumer(){
+      Properties consumerProperties = new Properties();
+
+      this.consumer = KafkaConsumer&lt;String, String&gt;();
+    }
+}
+</code></pre>
 
 
       </google-codelab-step>
