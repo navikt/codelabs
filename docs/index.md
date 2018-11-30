@@ -1,4 +1,4 @@
-@# codelabs
+# codelabs
 Codelabs for NAVIKT - work in progress! 
 
 1.  [Kafka clients introduction tutorial](https://navikt.github.io/codelabs/kafka-clients-intro)
