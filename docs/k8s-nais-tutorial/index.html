@@ -64,13 +64,13 @@
 <h2>About the Dockerfile</h2>
 <h2>Create a Docker image</h2>
 <p>In the folder <code>nais-tutorial</code> run this command to build a Docker image, remember to insert your username:</p>
-<pre><code>docker build -t YOUR_USERNAME/nais-demoapp .
+<pre><code>docker build --tag YOUR_USERNAME/nais-demoapp:1.0 .
 </code></pre>
-<p>This will create an image of the application. To list your local images:</p>
+<p>This will create an image of the application with the name YOUR_USERNAME/nais-demoapp and the tag (think of it as the version) 1.0. To list your local images:</p>
 <pre><code>docker images
 </code></pre>
 <p>You can test the image locally by running:</p>
-<pre><code>docker run -d -p 8080 YOUR_USERNAME/nais-demoapp
+<pre><code>docker run -d -p 8080 YOUR_USERNAME/nais-demoapp:1.0
 </code></pre>
 <p>This will spin up a container based on your image.<br>To view the application in your browser, you need to find out which port it is mapped to:</p>
 <pre><code>docker ps
@@ -87,7 +87,7 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Kubernetes" duration="0">
+      <google-codelab-step label="Kubernetes" duration="4">
         <p>Now that we have made our Docker image available on the web, the time has come to take a look at Kubernetes. Out of the box, Kubernetes will manage your Docker containers, keep track of whether they are healthy or not and how to reach them. In this section, we will deploy our container on a Kubernetes cluster.</p>
 <h2>Kubectl</h2>
 <p>We need to install the Kubernetes command line tool <code>kubectl</code>. If you have installed it, skip this step.</p>
@@ -99,13 +99,13 @@
 <pre><code>gcloud container clusters get-credentials CLUSTER_NAME --zone europe/north1-a --project PROJECT_NAME --account YOUR_EMAIL
 </code></pre>
 <p>This command will authenticate you against the Kubernetes cluster CLUSTER_NAME.<br>Check that you&#39;re authenticated by listing services in the cluster:</p>
-<pre><code>kubectl get service
+<pre><code>kubectl get pods
 </code></pre>
 <p>It might not output anything, but as long as it doesn&#39;t give an error, you are all good.</p>
 <p>The command writes to a config file, default <code>$HOME/.kube/config</code>, you can take a look at it if you&#39;re curious.</p>
 <h2>Run your container</h2>
 <p>You can run your container with this command:</p>
-<pre><code>kubectl run YOUR_USERNAME/nais-demoapp
+<pre><code>kubectl run YOUR_NAME-demoapp --image=YOUR_USERNAME/nais-demoapp:1.0
 </code></pre>
 <p>This will create your container in a Kubernetes resource that we call pod. Lets take a look at it:</p>
 <pre><code>kubectl get pods
@@ -115,13 +115,66 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Kubernetes deployment" duration="0">
-        
+      <google-codelab-step label="Kubernetes deployment" duration="5">
+        <p>In the previous section, we managed to run our application on Kubernetes, and while thats good and all, we need a more robust way to deploy an application.</p>
+<p>Pods are the basic component in Kubernetes, but they are not reliable. In fact, they are mortal. Kubernetes will not guarantee that a running pod is running ...<br>So to deal with this, we introduce the concept of deployments.</p>
+<p>Normally we let Kubernetes manage the pods for us, so instead we will create the resource Deployment. This resource will manage our application pods. The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app. The deployment also holds information of the desired number of pods you want running.</p>
+<h2>Create a deployment</h2>
+<p>Lets create a deployment. Open the file <code>deployment.yaml</code> in the repository you cloned.</p>
+<p>In this yaml file, we will describe the desired state for our application. For example, you can see that the field <code>replicas</code> is set to <code>3</code>. This means that we want 3 pods for this application running.</p>
+<p>We need to add more information, so lets go ahead and add our Docker image.</p>
+<pre><code>    spec:
+      containers:
+      - name: app-container
+        image: INSERT_IMAGE_HERE
+</code></pre>
+<p>Set the field <code>spec.template.spec.containers.image</code> to <code>YOUR_DOCKERHUB_USERNAME/nais-demoapp:1.0</code>, which tells Kubernetes to pull the image nais-demoapp version 1.0 from your Docker Hub account.</p>
+<p>We also need to set some metadata and labels:</p>
+<ul>
+<li>Set <code>metadata.name</code> to a what ever you want to name your app<br>This is the name for the Kubernetes resources created when you apply this file in a cluster.</li>
+<li>Set <code>metadata.labels.app</code> to for example <code>yourname-app</code>.<br>This label will</li>
+<li>Set the same app label to the fields<code>spec.selector.matchLabels.app</code> and <code>spec.template.metadata.labels</code></li>
+</ul>
+<p>On the last line in the file, you see that we have set the <code>containerPort</code> to <code>80</code>, which will open that port on the Pod so that we can send traffic to the container.</p>
+
 
       </google-codelab-step>
     
       <google-codelab-step label="Kubernetes service" duration="0">
         
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Ingress" duration="0">
+        
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Inspect your app" duration="0">
+        
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Naiserator" duration="5">
+        
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Logging and metrics" duration="0">
+        
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Clean-up" duration="0">
+        <p>Duration 1:00</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Further reading" duration="0">
+        <p>Check out the NAIS documentation at <a href="https://nais.io/doc" target="_blank">https://nais.io/doc</a> and the Kubernetes documentation over at <a href="https://kubernetes.io/docs/" target="_blank">https://kubernetes.io/docs/</a>.</p>
+<p>We can also recommend <a href="https://www.youtube.com/watch?v=4ht22ReBjno" target="_blank">the illustrated childrens guide to Kubernetes</a>.</p>
+
 
       </google-codelab-step>
     
