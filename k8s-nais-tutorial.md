@@ -48,7 +48,7 @@ Docker is a container technology that we can use to wrap an application into an 
 
 Take a look at the repository `nais-tutorial`. This contains source code for a small example application. As you can see, it also contains a file `Dockerfile`. This file contains instructions on how to create a Docker image for the application.
 
-More info........	
+More info........ 
 
 
 ### About the Dockerfile
@@ -58,10 +58,10 @@ More info........
 In the folder `nais-tutorial` run this command to build a Docker image, remember to insert your username:
 
 ```
-docker build -t YOUR_USERNAME/nais-demoapp .
+docker build --tag YOUR_USERNAME/nais-demoapp:1.0 .
 ```
 
-This will create an image of the application. To list your local images:
+This will create an image of the application with the name YOUR_USERNAME/nais-demoapp and the tag (think of it as the version) 1.0. To list your local images:
 
 ```
 docker images
@@ -70,7 +70,7 @@ docker images
 You can test the image locally by running:
 
 ```
-docker run -d -p 8080 YOUR_USERNAME/nais-demoapp
+docker run -d -p 8080 YOUR_USERNAME/nais-demoapp:1.0
 ```
 
 This will spin up a container based on your image.
@@ -97,6 +97,7 @@ You can see that it pushes your image in layers. (INSERT INFO ON LAYERS)
 
 
 ## Kubernetes
+Duration: 4:00
 
 Now that we have made our Docker image available on the web, the time has come to take a look at Kubernetes. Out of the box, Kubernetes will manage your Docker containers, keep track of whether they are healthy or not and how to reach them. In this section, we will deploy our container on a Kubernetes cluster.
 
@@ -123,7 +124,7 @@ This command will authenticate you against the Kubernetes cluster CLUSTER_NAME.
 Check that you're authenticated by listing services in the cluster:
 
 ```
-kubectl get service
+kubectl get pods
 ```
 
 It might not output anything, but as long as it doesn't give an error, you are all good.
@@ -132,10 +133,11 @@ The command writes to a config file, default `$HOME/.kube/config`, you can take 
 
 ### Run your container
 
+
 You can run your container with this command:
 
 ```
-kubectl run YOUR_USERNAME/nais-demoapp
+kubectl run YOUR_NAME-demoapp --image=YOUR_USERNAME/nais-demoapp:1.0
 ```
 
 This will create your container in a Kubernetes resource that we call pod. Lets take a look at it:
@@ -147,5 +149,59 @@ kubectl get pods
 Pods are Kubernetes resources that mainly contain one or more containers, along with an internal IP and specifications on how to run the container(s). The pod we now created only contain one container. If your application is using a proxy, you might want to specify several containers in one pod.
 
 ## Kubernetes deployment
+Duration: 5:00
+
+In the previous section, we managed to run our application on Kubernetes, and while thats good and all, we need a more robust way to deploy an application.
+
+Pods are the basic component in Kubernetes, but they are not reliable. In fact, they are mortal. Kubernetes will not guarantee that a running pod is running ...
+So to deal with this, we introduce the concept of deployments.
+
+Normally we let Kubernetes manage the pods for us, so instead we will create the resource Deployment. This resource will manage our application pods. The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app. The deployment also holds information of the desired number of pods you want running.
+
+### Create a deployment
+Lets create a deployment. Open the file `deployment.yaml` in the repository you cloned.
+
+In this yaml file, we will describe the desired state for our application. For example, you can see that the field `replicas` is set to `3`. This means that we want 3 pods for this application running. 
+
+We need to add more information, so lets go ahead and add our Docker image.
+
+```
+    spec:
+      containers:
+      - name: app-container
+        image: INSERT_IMAGE_HERE
+```
+
+Set the field `spec.template.spec.containers.image` to `YOUR_DOCKERHUB_USERNAME/nais-demoapp:1.0`, which tells Kubernetes to pull the image nais-demoapp version 1.0 from your Docker Hub account.
+
+
+We also need to set some metadata and labels:
+
+- Set `metadata.name` to a what ever you want to name your app
+  This is the name for the Kubernetes resources created when you apply this file in a cluster.
+- Set `metadata.labels.app` to for example `yourname-app`.
+  This label will
+- Set the same app label to the fields`spec.selector.matchLabels.app` and `spec.template.metadata.labels`
+
+On the last line in the file, you see that we have set the `containerPort` to `80`, which will open that port on the Pod so that we can send traffic to the container.
+
 
 ## Kubernetes service
+
+## Ingress
+
+## Inspect your app
+
+## Naiserator
+Duration: 5:00
+
+## Logging and metrics
+
+## Clean-up
+Duration 1:00
+
+## Further reading
+
+Check out the NAIS documentation at [https://nais.io/doc](https://nais.io/doc) and the Kubernetes documentation over at [https://kubernetes.io/docs/](https://kubernetes.io/docs/).
+
+We can also recommend [the illustrated childrens guide to Kubernetes](https://www.youtube.com/watch?v=4ht22ReBjno).
