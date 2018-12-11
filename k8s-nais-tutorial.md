@@ -183,15 +183,12 @@ Duration: 5:00
 
 The Pod is the resource where our containerized application is running. It receives traffic and we can inspect its runtime status and health, along other things. It is managed and controlled by its ReplicaSet.
 
-The ReplicaSet contains the desired state for the application, and that specification is immutable. We cannot update this information.
-
-The Deployment controls the ReplicaSet and we can edit the specification here. First, take a look at the Deployment:
+The ReplicaSet contains the desired state for the application and is (usually) managed and owned by a Deployment. First, take a look at the Deployment:
 
 ``` 
 kubectl describe deployment tutorial-YOUR_NAME
 ```
  
-
 
 Deployment is the most common way of running X copies (Pods) of your application. And it supports rolling updates to your container images.
 The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app.
@@ -204,7 +201,6 @@ The first time we deployed the application on Kubernetes, we used the `kubectl r
 Create a file with the name `deployment.yaml`.
 
 In this yaml file, we will describe the desired state for our application. 
-We need to add more information, so lets go ahead and add our Docker image.
 
 ```
 apiVersion: apps/v1
@@ -230,6 +226,7 @@ spec:
         - containerPort: CONTAINER_PORT
 ```
 
+We need to add more information, so lets go ahead and add our Docker image.
 Set the field `spec.template.spec.containers.image` to `gcr.io/google-containers/echoserver:1.10`.
 
 Replicas: 3
