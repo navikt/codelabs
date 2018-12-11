@@ -11,10 +11,10 @@ feedback link:
 This tutorial walks you through Kubernetes basics and will introduce you to the features the [NAIS](https://nais.io) platform provides you.
 
 ### About Kubernetes
-[Kubernetes](https://kubernetes.io) is a system for deploying and managing containerized applications. Not familiar with containers? Don't worry, you will learn about it in this tutorial as well.
+[Kubernetes](https://kubernetes.io) is a system for deploying and managing containerized applications.
 
 ### About NAIS
-NAIS is [NAV](https://nav.no)'s application infrastructure platform built to increase development speed by providing our developers at NAV with the best possible tools to develop and run their applications. The platform based on Kubernetes and provides additional tools and components that our developers might need.
+NAIS is [NAV](https://nav.no)'s application infrastructure platform built to increase development speed by providing our developers at NAV with the best possible tools to develop and run their applications. The platform is  based on Kubernetes and provides additional tools and components that our developers might need.
 
 ## Prerequisites
 Duration: 3:00
@@ -38,25 +38,30 @@ When asked about whether to create a new project, say no.
 ## Docker
 Duration: 2:00
 
-Docker is a container technology that we can use to wrap an application into an image. masse info her <3 We will use an existing image called `echoserver`. Image url: `gcr.io/google-containers/echoserver:1.10`
-
-
-
+Docker is a technology that allows us to package an application with it's requirements and basic operating system into a container. Read more [here](https://www.docker.com/resources/what-container).
+As this tutorials primary focus is kubernetes (which orchestrates containers), we will not dive deeper into Docker, but rather use an already existing docker image called echoserver. Echoserver is a simple web app that responds with some metadata about it's host and a few key request headers.
+Echoserver image url: `gcr.io/google-containers/echoserver:1.10`
 
 ## Kubernetes
 Duration: 4:00
 
-Now that we have made our Docker image available on the web, the time has come to take a look at Kubernetes. Out of the box, Kubernetes will manage your Docker containers, keep track of whether they are healthy or not and how to reach them. In this section, we will deploy our container on a Kubernetes cluster.
+Now that we know which container image we want, the time has come to take a look at Kubernetes. By default Kubernetes provides a lot of handy features for managing containers. In this section, we will deploy our container on a Kubernetes cluster and take advantage of some of the handy features Kubernetes provides.
 
 ### Kubectl
-
 We need to install the Kubernetes command line tool `kubectl`. If you have installed it, skip this step.
 
-You can install `kubectl` using the instructions on the [Kubernetes documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl) or install through the `gcloud` tool you installed in the first section: 
-
+You can install `kubectl` using the instructions on the [Kubernetes documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl) or install through the `gcloud` tool you installed in the first section:
 ```
 gcloud components install kubectl
 ```
+
+Verify gcloud kubectl is properly installed by issuing `kubectl version`. Output should be something like:
+```
+$ kubectl version
+Client Version: version.Info{Major:"1", Minor:"13", GitVersion:"v1.13.0", GitCommit:"ddf47ac13c1a9483ea035a79cd7c10005ff21a6d", GitTreeState:"clean", BuildDate:"2018-12-03T21:04:45Z", GoVersion:"go1.11.2", Compiler:"gc", Platform:"darwin/amd64"}
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
+```
+Don't worry about the second line, it just means that we've not connected to a cluster yet.
 
 
 ### Access
@@ -84,7 +89,7 @@ The command writes to a config file, default `$HOME/.kube/config`, you can take 
 You can run your container with this command:
 
 ```
-kubectl run YOUR_NAME-demoapp --image=YOUR_USERNAME/nais-demoapp:1.0
+kubectl run YOUR_NAME-demoapp --image=gcr.io/google-containers/echoserver:1.10
 ```
 
 This will create your container in a Kubernetes resource that we call pod. Lets take a look at it:
@@ -93,7 +98,11 @@ This will create your container in a Kubernetes resource that we call pod. Lets 
 kubectl get pods
 ```
 
-Pods are Kubernetes resources that mainly contain one or more containers, along with an internal IP and specifications on how to run the container(s). The pod we now created only contain one container. If your application is using a proxy, you might want to specify several containers in one pod.
+[from here](https://kubernetes.io/docs/tutorials/kubernetes-basics/explore/explore-intro/#kubernetes-pods)A Pod is a Kubernetes abstraction that represents a group of one or more application containers, and some shared resources for those containers.
+Those resources include:
+- Shared storage, as Volumes
+- Networking, as a unique cluster IP address
+- Information about how to run each container, such as the container image version or specific ports to use
 
 ## Kubernetes deployment
 Duration: 5:00
@@ -108,7 +117,7 @@ Normally we let Kubernetes manage the pods for us, so instead we will create the
 ### Create a deployment
 Lets create a deployment. Open the file `deployment.yaml` in the repository you cloned.
 
-In this yaml file, we will describe the desired state for our application. For example, you can see that the field `replicas` is set to `3`. This means that we want 3 pods for this application running. 
+In this yaml file, we will describe the desired state for our application. For example, you can see that the field `replicas` is set to `3`. This means that we want 3 pods for this application running.
 
 We need to add more information, so lets go ahead and add our Docker image.
 
