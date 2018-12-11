@@ -88,8 +88,12 @@
 <pre><code>kubectl describe pods INSERT_POD_NAME
 </code></pre>
 <p>This will list the labels assigned to the pod, the IP, information about the Docker container and image, the state of the container, the status of the Pod and much more information.</p>
-<h3>Update the image version</h3>
-<p>There is a newer version of our echoserver available, so lets run the new image:</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Update the application" duration="0">
+        <p>There is a newer version of our echoserver available, so lets run the new image:</p>
 <pre><code>kubectl run tutorial-YOUR_NAME --image=gcr.io/google-containers/echoserver:1.10
 </code></pre>
 <p>Hmm, error... The deployment already exists. To solve this we could go ahead and delete the Pod:</p>
@@ -115,27 +119,43 @@
 
 </code></pre>
 <p>This will open your default editor, describing the deployment in the YAML format. Navigate to the field <code>spec.template.spec.containers.image</code> and insert the image name <code>gcr.io/google-containers/echoserver:1.10</code>.</p>
-<p>In terminal window watching the pods, you will see that old pod is terminating at once, while the new ones are initializing. This means that we did not achieve update without the application being down.</p>
+<p>In terminal window watching the pods, you will see that old pod is terminating at once, while the new ones are initializing. This means that we did not achieve update without the application being down. Keep this window open.</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Kubernetes deployment" duration="5">
+      <google-codelab-step label="Rolling update" duration="5">
         <p>The Pod is the resource where our containerized application is running. It receives traffic and we can inspect its runtime status and health, along other things. It is managed and controlled by its ReplicaSet.</p>
-<p>The ReplicaSet contains the desired state for the application, and that specification is immutable. We cannot update this information. The Deployment controls the ReplicaSet and we can edit the specification here.</p>
-<p>Lets first take a look at the Deployment:</p>
+<p>The ReplicaSet contains the desired state for the application, and that specification is immutable. We cannot update this information.</p>
+<p>The Deployment controls the ReplicaSet and we can edit the specification here. First, take a look at the Deployment:</p>
 <pre><code>kubectl describe deployment tutorial-YOUR_NAME
 </code></pre>
-<p>...</p>
-<p>Normally we let Kubernetes manage the pods for us, so instead we will create the resource Deployment. This resource will manage our application pods.<br>The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app.<br>The deployment also holds information of the desired number of pods you want running.</p>
-<h2>Create a deployment</h2>
-<p>Lets create a deployment. Open the file <code>deployment.yaml</code> in the repository you cloned.</p>
-<p>In this yaml file, we will describe the desired state for our application. For example, you can see that the field <code>replicas</code> is set to <code>3</code>. This means that we want 3 pods for this application running.</p>
-<p>We need to add more information, so lets go ahead and add our Docker image.</p>
-<pre><code>    spec:
+<p>Deployment is the most common way of running X copies (Pods) of your application. And it supports rolling updates to your container images.<br>The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app.</p>
+<h2>Write the configuration file</h2>
+<p>The first time we deployed the application on Kubernetes, we used the <code>kubectl run</code> command. This time we will write a configuration file which we will apply in the cluster.</p>
+<p>Create a file with the name <code>deployment.yaml</code>.</p>
+<p>In this yaml file, we will describe the desired state for our application.<br>We need to add more information, so lets go ahead and add our Docker image.</p>
+<pre><code>apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: NAME
+  labels:
+    app: APP_LABEL
+spec:
+  replicas: NUMBER_OF_COPIES
+  selector:
+    matchLabels:
+      app: MATCH_LABEL
+  template:
+    metadata:
+      labels:
+        app: APP_LABEL
+    spec:
       containers:
-      - name: app-container
-        image: INSERT_IMAGE_HERE
+      - name: CONTAINER_NAME
+        image: DOCKER_IMAGE
+        ports:
+        - containerPort: CONTAINER_PORT
 </code></pre>
 <p>Set the field <code>spec.template.spec.containers.image</code> to <code>gcr.io/google-containers/echoserver:1.10</code>.</p>
 <p>Replicas: 3</p>
@@ -149,10 +169,9 @@
 <p>Apply the file:</p>
 <pre><code>kubectl apply -f deployment.yaml
 </code></pre>
-<p>And watch the update of the Pods:</p>
-<pre><code>kubectl get pods --watch | grep YOUR_NAME
-</code></pre>
+<p>And watch the update of the Pods in the other terminal window.</p>
 <p>Notice that the new Pods have names with different IDs.</p>
+<p>// Inspect the replicasets to see that that the deployment created a new one</p>
 <h2>Health checks</h2>
 <p>// helsesjekk, 1 replica = ikke nedefri deployment, neste 3 replicas. Videre til services, så vi veit hvilken ip vi skal gå mot</p>
 
