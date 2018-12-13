@@ -27,7 +27,7 @@
       <google-codelab-step label="About this tutorial" duration="0">
         <p>This tutorial walks you through Kubernetes basics and will introduce you to the features the <a href="https://nais.io" target="_blank">NAIS</a> platform provides you.</p>
 <h2>About Kubernetes</h2>
-<p><a href="https://kubernetes.io" target="_blank">Kubernetes</a> is a system for deploying and managing conterinized applications. Not familiar with containers? Don&#39;t worry, you will learn about it in this tutorial as well.</p>
+<p><a href="https://kubernetes.io" target="_blank">Kubernetes</a> is a system for deploying and managing containerized applications. Not familiar with containers? Don&#39;t worry, you will learn about it in this tutorial as well.</p>
 <h2>About NAIS</h2>
 <p>NAIS is <a href="https://nav.no" target="_blank">NAV</a>&#39;s application infrastructure platform built to increase development speed by providing our developers at NAV with the best possible tools to develop and run their applications. The platform based on Kubernetes and provides additional tools and components that our developers might need.</p>
 
@@ -37,88 +37,97 @@
       <google-codelab-step label="Prerequisites" duration="3">
         <ul>
 <li>You must install the <a href="https://cloud.google.com/sdk/docs/downloads-interactive" target="_blank">gcloud-sdk</a> locally on your machine</li>
-<li>Install Docker - see https://www.docker.com/get-started for instructions.</li>
-<li>An account on a Docker registry, e.g. https://dockerhub.com</li>
-<li>Access to a Kubernetes cluster on Google Cloud Platform</li>
-<li>Clone the <a href="https://github.com/nais/nais-tutorial" target="_blank">nais-tutorial</a> repository</li>
+<li>Access to a NAIS cluster on Google Cloud Platform</li>
 </ul>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Set up gcloud" duration="2">
-        <p>Set up the Google Cloud SDK tool:</p>
+      <google-codelab-step label="Setup" duration="2">
+        <h2>Google Cloud SDK</h2>
+<p>Set up the Google Cloud SDK tool:</p>
 <pre><code>gcloud init
 </code></pre>
-<p>When asked about whether to create a new project, say no.</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Docker" duration="10">
-        <p>We will in this section create a Docker image for our application, but first, lets take a look at Docker.</p>
-<h2>About Docker</h2>
-<p>Docker is a container technology that we can use to wrap an application into an image.</p>
-<p>Take a look at the repository <code>nais-tutorial</code>. This contains source code for a small example application. As you can see, it also contains a file <code>Dockerfile</code>. This file contains instructions on how to create a Docker image for the application.</p>
-<p>More info........</p>
-<h2>About the Dockerfile</h2>
-<h2>Create a Docker image</h2>
-<p>In the folder <code>nais-tutorial</code> run this command to build a Docker image, remember to insert your username:</p>
-<pre><code>docker build --tag YOUR_USERNAME/nais-demoapp:1.0 .
-</code></pre>
-<p>This will create an image of the application with the name YOUR_USERNAME/nais-demoapp and the tag (think of it as the version) 1.0. To list your local images:</p>
-<pre><code>docker images
-</code></pre>
-<p>You can test the image locally by running:</p>
-<pre><code>docker run -d -p 8080 YOUR_USERNAME/nais-demoapp:1.0
-</code></pre>
-<p>This will spin up a container based on your image.<br>To view the application in your browser, you need to find out which port it is mapped to:</p>
-<pre><code>docker ps
-</code></pre>
-<p>Note the port mapping (<code>0.0.0.0:12345(random port) -&gt; 8080</code>) and visit <code>localhost:INSERT_RANDOM_PORT</code> in your most loved browser. You should see the text &#34;Hello, world!&#34;</p>
-<h2>Push to Docker registry</h2>
-<h3>Log into Dockerhub</h3>
-<p>....</p>
-<p>We need the docker image to be available on the internet in order to deploy it to Kubernetes. Push it to your Docker registry:</p>
-<pre><code>docker push YOUR_USERNAME/nais-demoapp
-</code></pre>
-<p>You can see that it pushes your image in layers. (INSERT INFO ON LAYERS)</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Kubernetes" duration="4">
-        <p>Now that we have made our Docker image available on the web, the time has come to take a look at Kubernetes. Out of the box, Kubernetes will manage your Docker containers, keep track of whether they are healthy or not and how to reach them. In this section, we will deploy our container on a Kubernetes cluster.</p>
+<p>When asked about whether to create a new project, say no.<br>Make sure you answer yes when prompted to let the installer modify your profile to update your <code>PATH</code> in order to get gcloud binary directory added to your path.<br>Remember to log in with your @nav adress.</p>
 <h2>Kubectl</h2>
 <p>We need to install the Kubernetes command line tool <code>kubectl</code>. If you have installed it, skip this step.</p>
-<p>You can install <code>kubectl</code> using the instructions on the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl" target="_blank">Kubernetes documentation</a> or install through the <code>gcloud</code> tool you installed in the first section:</p>
+<p>Install through the <code>gcloud</code> tool you installed in the first section:</p>
 <pre><code>gcloud components install kubectl
 </code></pre>
+<p>You can also install <code>kubectl</code> using the instructions on the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl" target="_blank">Kubernetes documentation</a>.</p>
+<h3>(Optional) Shell autocompletion</h3>
+<p>If you want to enable shell autocompletion, you need to run the steps described <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion" target="_blank">here</a>.</p>
 <h2>Access</h2>
-<p>To deploy to the Kubernetes cluster, you need access:</p>
+<p>You also need access to the Kubernetes cluster:</p>
 <pre><code>gcloud container clusters get-credentials CLUSTER_NAME --zone europe/north1-a --project PROJECT_NAME --account YOUR_EMAIL
 </code></pre>
-<p>This command will authenticate you against the Kubernetes cluster CLUSTER_NAME.<br>Check that you&#39;re authenticated by listing services in the cluster:</p>
+<p>This command will authenticate you against the Kubernetes cluster CLUSTER_NAME.<br>Verify that you have gained access by running:</p>
 <pre><code>kubectl get pods
 </code></pre>
 <p>It might not output anything, but as long as it doesn&#39;t give an error, you are all good.</p>
 <p>The command writes to a config file, default <code>$HOME/.kube/config</code>, you can take a look at it if you&#39;re curious.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Run an example app" duration="4">
+        <p>In this section we will make a first deployment of a small application. We will use an existing application already wrapped in a Docker image for us.</p>
+<h2>Docker</h2>
+<p>Kubernetes is a system for deploying, running and managing containerized applications.<br>Docker is a container technology that we can use to wrap an application into an image. You can read more about Docker <a href="https://docker.io..." target="_blank">here</a></p>
+<p>Since Kubernetes supports running applications in containers, we need a containereized application for continuing this tutorial.<br>The Docker image we will use is called <code>echoserver</code>. Image url: <code>gcr.io/google-containers/echoserver:1.10</code></p>
+<p>Out of the box, Kubernetes will manage your Docker containers, keep track of whether they are healthy or not and how to reach them.</p>
 <h2>Run your container</h2>
 <p>You can run your container with this command:</p>
-<pre><code>kubectl run YOUR_NAME-demoapp --image=YOUR_USERNAME/nais-demoapp:1.0
+<pre><code>kubectl run tutorial-YOUR_NAME --image=gcr.io/google-containers/echoserver:1.9
 </code></pre>
-<p>This will create your container in a Kubernetes resource that we call pod. Lets take a look at it:</p>
-<pre><code>kubectl get pods
+<p>This will create your container in a Kubernetes resource that we call pod.<br>Pods are the basic unit for all of the workloads you run on Kubernetes. They usually contain one or more containers, along with an internal IP and specifications on how to run the container(s).<br>Lets take a look at it:</p>
+<pre><code>kubectl get pods | grep YOUR_NAME
 </code></pre>
-<p>Pods are Kubernetes resources that mainly contain one or more containers, along with an internal IP and specifications on how to run the container(s). The pod we now created only contain one container. If your application is using a proxy, you might want to specify several containers in one pod.</p>
+<p>You can see the status of your pod, ready containers, restarts and the age of the pod.<br>The pod also has a name, which is the name you specified in the <code>run</code> command above, but in addition it is postfixed by some numbers and letters, which makes sure the pod has an unique name.</p>
+<p>Lets take a closer look at the pod we created:</p>
+<pre><code>kubectl describe pods INSERT_POD_NAME
+</code></pre>
+<p>This will list the labels assigned to the pod, the IP, information about the Docker container and image, the state of the container, the status of the Pod and much more information.</p>
+<h3>Update the image version</h3>
+<p>There is a newer version of our echoserver available, so lets run the new image:</p>
+<pre><code>kubectl run tutorial-YOUR_NAME --image=gcr.io/google-containers/echoserver:1.10
+</code></pre>
+<p>Hmm, error... The deployment already exists. To solve this we could go ahead and delete the Pod:</p>
+<pre><code>kubectl delete pod INSERT_POD_NAME
+</code></pre>
+<p>That worked out nicely. Lets verify that it is deleted:</p>
+<pre><code>kubectl get pods | grep YOUR_NAME
+</code></pre>
+<p>Does the output list two Pods? One with the status Terminating (expected, since we deleted it), but also one that is in a state of <code>Init</code>, <code>PodInitializing</code> or <code>Running</code>?<br>This brings us to another Kubernetes resource type, called RecplicaSet. The ReplicaSet holds our desired state of the application and its job is to make sure we have Pods running according to that state.<br>So when we delete a Pod, it will create a new one according to the same specification. Take a look at the ReplicaSet:</p>
+<pre><code>kubectl get replicaset | grep YOUR_NAME
+</code></pre>
+<p>It outputs along with its age, how many desired, current and ready Pods it has. Take a closer look at its name. The letters and numbers after the name you chose is the same as the first one in the Pod name.</p>
+<p>Perhaps we could delete the ReplicaSet, then, before creating the new container? That will not work either.<br>Remember the output from run command in the beginning of this section, <code>deployment &#34;echoserver-YOUR_NAME&#34; created</code>? The ReplicaSet is controlled by a third Kubernetes resource called Deployment.</p>
+<pre><code>kubectl get deployment | grep YOUR_NAME
+</code></pre>
+<p>The Deployment will recreate the ReplicaSet if we delete it. What we could do is to delete the deployment. But our original intention was not to delete the app, it was to update it.<br>Deleting the deployment will result in down time for our users. So lets look at alternatives.</p>
+<p>First of all, open a new terminal window and run this command to watch your pod:</p>
+<pre><code>kubectl get pods --watch | grep YOUR_NAME
+</code></pre>
+<p>Keep this terminal window open, and preferably visible next to the other terminal window.</p>
+<p>It is possible to edit the Deployment. In the first terminal window, run:</p>
+<pre><code>kubectl edit deploy tutorial-YOUR_NAME
+
+</code></pre>
+<p>This will open your default editor, describing the deployment in the YAML format. Navigate to the field <code>spec.template.spec.containers.image</code> and insert the image name <code>gcr.io/google-containers/echoserver:1.10</code>.</p>
+<p>In terminal window watching the pods, you will see that old pod is terminating at once, while the new ones are initializing. This means that we did not achieve update without the application being down.</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Kubernetes deployment" duration="5">
-        <p>In the previous section, we managed to run our application on Kubernetes, and while thats good and all, we need a more robust way to deploy an application.</p>
-<p>Pods are the basic component in Kubernetes, but they are not reliable. In fact, they are mortal. Kubernetes will not guarantee that a running pod is running ...<br>So to deal with this, we introduce the concept of deployments.</p>
-<p>Normally we let Kubernetes manage the pods for us, so instead we will create the resource Deployment. This resource will manage our application pods. The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app. The deployment also holds information of the desired number of pods you want running.</p>
+        <p>The Pod is the resource where our containerized application is running. It receives traffic and we can inspect its runtime status and health, along other things. It is managed and controlled by its ReplicaSet.</p>
+<p>The ReplicaSet contains the desired state for the application, and that specification is immutable. We cannot update this information. The Deployment controls the ReplicaSet and we can edit the specification here.</p>
+<p>Lets first take a look at the Deployment:</p>
+<pre><code>kubectl describe deployment tutorial-YOUR_NAME
+</code></pre>
+<p>...</p>
+<p>Normally we let Kubernetes manage the pods for us, so instead we will create the resource Deployment. This resource will manage our application pods.<br>The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app.<br>The deployment also holds information of the desired number of pods you want running.</p>
 <h2>Create a deployment</h2>
 <p>Lets create a deployment. Open the file <code>deployment.yaml</code> in the repository you cloned.</p>
 <p>In this yaml file, we will describe the desired state for our application. For example, you can see that the field <code>replicas</code> is set to <code>3</code>. This means that we want 3 pods for this application running.</p>
@@ -128,7 +137,8 @@
       - name: app-container
         image: INSERT_IMAGE_HERE
 </code></pre>
-<p>Set the field <code>spec.template.spec.containers.image</code> to <code>YOUR_DOCKERHUB_USERNAME/nais-demoapp:1.0</code>, which tells Kubernetes to pull the image nais-demoapp version 1.0 from your Docker Hub account.</p>
+<p>Set the field <code>spec.template.spec.containers.image</code> to <code>gcr.io/google-containers/echoserver:1.10</code>.</p>
+<p>Replicas: 3</p>
 <p>We also need to set some metadata and labels:</p>
 <ul>
 <li>Set <code>metadata.name</code> to a what ever you want to name your app<br>This is the name for the Kubernetes resources created when you apply this file in a cluster.</li>
@@ -136,12 +146,26 @@
 <li>Set the same app label to the fields<code>spec.selector.matchLabels.app</code> and <code>spec.template.metadata.labels</code></li>
 </ul>
 <p>On the last line in the file, you see that we have set the <code>containerPort</code> to <code>80</code>, which will open that port on the Pod so that we can send traffic to the container.</p>
+<p>Apply the file:</p>
+<pre><code>kubectl apply -f deployment.yaml
+</code></pre>
+<p>And watch the update of the Pods:</p>
+<pre><code>kubectl get pods --watch | grep YOUR_NAME
+</code></pre>
+<p>Notice that the new Pods have names with different IDs.</p>
+<h2>Health checks</h2>
+<p>// helsesjekk, 1 replica = ikke nedefri deployment, neste 3 replicas. Videre til services, så vi veit hvilken ip vi skal gå mot</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Kubernetes service" duration="0">
-        
+      <google-codelab-step label="Kubernetes service" duration="3">
+        <p>Run the command to list pods, but this time add the flag <code>-o wide</code> in order to get more information:</p>
+<pre><code>kubectl get pods -o wide | grep YOUR_NAME
+</code></pre>
+<p>Notice that the Pods have an internal IP and hopefully the status <code>Running</code>.</p>
+<p>One of the features of a Pod, is that it is mortal, which also means that we cannot rely on the IP address.</p>
+
 
       </google-codelab-step>
     
@@ -155,7 +179,7 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Naiserator" duration="5">
+      <google-codelab-step label="NAIS" duration="5">
         
 
       </google-codelab-step>
