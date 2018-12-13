@@ -217,8 +217,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: NAME
-  labels:
-    app: APP_LABEL
 spec:
   replicas: NUMBER_OF_COPIES
   selector:
@@ -227,7 +225,7 @@ spec:
   template:
     metadata:
       labels:
-        app: APP_LABEL
+        app: MATCH_LABEL
     spec:
       containers:
       - name: CONTAINER_NAME
