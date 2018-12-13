@@ -1,5 +1,5 @@
 author: Team Aura
-id: k8s-nais-demoapp
+id: k8s-nais-tutorial
 summary: This tutorial walks you through Kubernetes basics and introduces you to how to deploy on NAIS.
 status: draft
 feedback link:
@@ -126,7 +126,7 @@ kubectl describe pods INSERT_POD_NAME
 ```
 This will list the labels assigned to the pod, the IP, information about the Docker container and image, the state of the container, the status of the Pod and much more information.
 
-#### Update the image version
+## Update the application
 
 There is a newer version of our echoserver available, so lets run the new image:
 
@@ -184,9 +184,9 @@ kubectl edit deploy tutorial-YOUR_NAME
 
 This will open your default editor, describing the deployment in the YAML format. Navigate to the field `spec.template.spec.containers.image` and insert the image name `gcr.io/google-containers/echoserver:1.10`.
 
-In terminal window watching the pods, you will see that old pod is terminating at once, while the new ones are initializing. This means that we did not achieve update without the application being down. 
+In terminal window watching the pods, you will see that old pod is terminating at once, while the new ones are initializing. This means that we did not achieve update without the application being down. Keep this window open.
 
-## Kubernetes deployment
+## Rolling update
 Duration: 5:00
 
 In the previous section, we managed to run our application on Kubernetes, and while thats good and all, we need a more robust way to deploy an application.
@@ -199,27 +199,44 @@ Lets first take a look at the Deployment:
 kubectl describe deployment tutorial-YOUR_NAME
 ```
  
-...
 
-
-Normally we let Kubernetes manage the pods for us, so instead we will create the resource Deployment. This resource will manage our application pods.
+Deployment is the most common way of running X copies (Pods) of your application. And it supports rolling updates to your container images.
 The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app.
-The deployment also holds information of the desired number of pods you want running.
 
-### Create a deployment
-Lets create a deployment. Open the file `deployment.yaml` in the repository you cloned.
 
-In this yaml file, we will describe the desired state for our application. For example, you can see that the field `replicas` is set to `3`. This means that we want 3 pods for this application running.
+### Write the configuration file
 
-We need to add more information, so lets go ahead and add our Docker image.
+The first time we deployed the application on Kubernetes, we used the `kubectl run` command. This time we will write a configuration file which we will apply in the cluster.
+
+Create a file with the name `deployment.yaml`.
+
+In this yaml file, we will describe the desired state for our application. 
 
 ```
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: NAME
+  labels:
+    app: APP_LABEL
+spec:
+  replicas: NUMBER_OF_COPIES
+  selector:
+    matchLabels:
+      app: MATCH_LABEL
+  template:
+    metadata:
+      labels:
+        app: APP_LABEL
     spec:
       containers:
-      - name: app-container
-        image: INSERT_IMAGE_HERE
+      - name: CONTAINER_NAME
+        image: DOCKER_IMAGE
+        ports:
+        - containerPort: CONTAINER_PORT
 ```
 
+We need to add more information, so lets go ahead and add our Docker image.
 Set the field `spec.template.spec.containers.image` to `gcr.io/google-containers/echoserver:1.10`.
 
 Replicas: 3
@@ -240,14 +257,12 @@ Apply the file:
 kubectl apply -f deployment.yaml
 ```
 
-And watch the update of the Pods:
-
-```
-kubectl get pods --watch | grep YOUR_NAME
-```
+And watch the update of the Pods in the other terminal window.
 
 
 Notice that the new Pods have names with different IDs.
+
+// Inspect the replicasets to see that that the deployment created a new one
 
 
 
