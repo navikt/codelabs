@@ -8,13 +8,14 @@ feedback link:
 
 
 ## About this tutorial
-This tutorial walks you through Kubernetes basics and will introduce you to the features the [NAIS](https://nais.io) platform provides you.
+This tutorial walks you through Kubernetes basics and will introduce you to the features that the NAIS platform provides
+you.
 
-### About Kubernetes
+### Kubernetes
 [Kubernetes](https://kubernetes.io) is a system for deploying and managing containerized applications.
 
-### About NAIS
-NAIS is [NAV](https://nav.no)'s application infrastructure platform built to increase development speed by providing our developers at NAV with the best possible tools to develop and run their applications. The platform is  based on Kubernetes and provides additional tools and components that our developers might need.
+### NAIS
+[NAIS](https://nais.io) is [NAV](https://nav.no)'s application infrastructure platform built to increase development speed by providing our developers at NAV with the best possible tools to develop and run their applications. The platform is  based on Kubernetes and provides additional tools and components that our developers might need.
 
 ## Prerequisites
 Duration: 3:00
@@ -23,42 +24,23 @@ Duration: 3:00
 - Access to a NAIS cluster on Google Cloud Platform
 
 ## Setup
-Duration: 2:00
+Duration: 15:00
 
 ### Google Cloud SDK
 Set up the Google Cloud SDK tool:
-
 ```
 gcloud init
 ```
 
 When asked about whether to create a new project, say no.
-Make sure you answer yes when prompted to let the installer modify your profile to update your `PATH` in order to get gcloud binary directory added to your path.
-Remember to log in with your @nav adress.
-
-
-
-## Docker
-Duration: 2:00
-
-Docker is a technology that allows us to package an application with it's requirements and basic operating system into a container. Read more [here](https://www.docker.com/resources/what-container).
-As this tutorials primary focus is kubernetes (which orchestrates containers), we will not dive deeper into Docker, but rather use an already existing docker image called echoserver. Echoserver is a simple web app that responds with some metadata about it's host and a few key request headers.
-Echoserver image url: `gcr.io/google-containers/echoserver:1.10`
-
-## Kubernetes
-Duration: 4:00
-
-Now that we know which container image we want, the time has come to take a look at Kubernetes. By default Kubernetes provides a lot of handy features for managing containers. In this section, we will deploy our container on a Kubernetes cluster and take advantage of some of the handy features Kubernetes provides.
+Make sure you answer yes when prompted to let the installer modify your profile to update your `PATH` in order to get gcloud binary directory added to your path.  Remember to log in with your @nav adress.
 
 ### Kubectl
 We need to install the Kubernetes command line tool `kubectl`. If you have installed it, skip this step.
-
 Install through the `gcloud` tool you installed in the first section: 
-
 ```
 gcloud components install kubectl
 ```
-
 Verify gcloud kubectl is properly installed by issuing `kubectl version`. Output should be something like:
 ```
 $ kubectl version
@@ -66,25 +48,19 @@ Client Version: version.Info{Major:"1", Minor:"13", GitVersion:"v1.13.0", GitCom
 The connection to the server localhost:8080 was refused - did you specify the right host or port?
 ```
 Don't worry about the second line, it just means that we've not connected to a cluster yet.
-
 You can also install `kubectl` using the instructions on the [Kubernetes documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl).
 
 #### (Optional) Shell autocompletion
-
 If you want to enable shell autocompletion, you need to run the steps described [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion). 
 
-
 ### Access
-
 You also need access to the Kubernetes cluster:
-
 ```
 gcloud container clusters get-credentials CLUSTER_NAME --zone europe/north1-a --project PROJECT_NAME --account YOUR_EMAIL
 ```
 
 This command will authenticate you against the Kubernetes cluster CLUSTER_NAME.
 Verify that you have gained access by running:
-
 ```
 kubectl get pods
 ```
@@ -93,78 +69,94 @@ It might not output anything, but as long as it doesn't give an error, you are a
 
 The command writes to a config file, default `$HOME/.kube/config`, you can take a look at it if you're curious.
 
-## Run an example app
-Duration: 4:00
+## Docker
+Duration: 2:00
 
-In this section we will make a first deployment of a small application. We will use an existing application already wrapped in a Docker image for us.
+Docker is a technology that allows us to package an application with it's requirements and basic operating system into a container. Read
+more [here](https://www.docker.com/resources/what-container).  As this tutorials primary focus is kubernetes (which orchestrates
+containers), we will not dive deeper into Docker, but rather use an already existing docker image called echoserver. Echoserver is a simple
+web app that responds with some metadata about it's host and a few key request headers.
+Echoserver image url: `gcr.io/google-containers/echoserver`
 
-### Run your container
-You can run your container with this command:
+## Kubernetes
+Duration: 2:00
 
-```
-kubectl run YOUR_NAME-demoapp --image=gcr.io/google-containers/echoserver:1.9
-```
+Kubernetes is an open-source system for automating deployment, scaling, and management of containerized applications.  It groups containers that make up an application into logical units for easy management and discovery. Kubernetes builds upon 15 years of experience of running production workloads at Google, combined with best-of-breed ideas and practices from the community.
 
-This will create your container in a Kubernetes resource that we call pod. 
-[from here](https://kubernetes.io/docs/tutorials/kubernetes-basics/explore/explore-intro/#kubernetes-pods)A Pod is a Kubernetes abstraction that represents a group of one or more application containers, and some shared resources for those containers.
-Those resources include:
+## Run your first application
+Duration: 10:00
+
+In this section we will make a pod. We will use an existing application that's already Dockerized for us.
+
+A [pod](https://kubernetes.io/docs/tutorials/kubernetes-basics/explore/explore-intro/#kubernetes-pods) is a Kubernetes abstraction that
+represents a group of one or more application containers, and some shared resources for those containers. Those resources include:
 - Shared storage, as Volumes
 - Networking, as a unique cluster IP address
 - Information about how to run each container, such as the container image version or specific ports to use
 
-```
-kubectl get pods | grep YOUR_NAME
-```
+### Creating your first pod
+As we will create multiple files in the tutorial we suggest making a directory `$HOME/workshop` where you can store your files as you work
+on them.
 
+Create a file `pod.yaml` with the following contents:
+```
+apiVersion: v1
+kind: Pod
+metadata:
+  name: <YOUR_NAME>-echoserver
+spec:
+  containers:
+  - name: echoserver
+    image: gcr.io/google-containers/echoserver:1.9
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+```
+And run `kubectl apply -f pod.yaml`
+
+### Checking the status of our new pod
+```
+kubectl get pod <YOUR_NAME>-echoserver
+```
 You can see the status of your pod, ready containers, restarts and the age of the pod.
-The pod also has a name, which is the name you specified in the `run` command above, but in addition it is postfixed by some numbers and letters, which makes sure the pod has an unique name.
 
 Lets take a closer look at the pod we created:
-
 ```
-kubectl describe pods INSERT_POD_NAME
+kubectl describe pod <YOUR_NAME>-echoserver
 ```
-This will list the labels assigned to the pod, the IP, information about the Docker container and image, the state of the container, the status of the Pod and much more information.
+This will list more detailed information about this pod like its labels and the state of the container.
 
-## Update the application
+## Upgrading your application
+There is a newer version of echoserver available, so lets run the new image:
 
-There is a newer version of our echoserver available, so lets run the new image:
-
+Edit the `pod.yaml` file we created earlier, setting the `image` field to `gcr.io/google-containers/echoserver:1.10` resulting in the
+following contents:
 ```
-kubectl run YOUR_NAME-demoapp --image=gcr.io/google-containers/echoserver:1.10
+apiVersion: v1
+kind: Pod
+metadata:
+  name: <YOUR_NAME>-echoserver
+spec:
+  containers:
+  - name: echoserver
+    image: gcr.io/google-containers/echoserver:1.10
+    ports:
+    - containerPort: 8080
+      protocol: TCP
 ```
+Then run `kubectl apply -f pod.yaml`
 
-Hmm, error... The deployment already exists. To solve this we could go ahead and delete the Pod:
-
+Lets verify that it is updated:
 ```
-kubectl delete pod YOUR_NAME-demoapp
+kubectl describe pod <YOUR_NAME>-echoserver
 ```
+and look for the `Image` field and verify it's value is now `gcr.io/google-containers/echoserver:1.10`
 
-That worked out nicely. Lets verify that it is deleted:
+## Summary
+In this chapter we've created, looked at, and updated a pod. The downside with using pods like we've just done is that a pod is bound to a specific server in the cluster and also won't be able to scale horizontally. In the next chapter, we'll take a close look at *Deployments*, which solves these issues.
 
-```
-kubectl get pods | grep YOUR_NAME
-```
-
-Does the output list two Pods? One with the status Terminating (expected, since we deleted it), but also one that is in a state of `Init`, `PodInitializing` or `Running`?
-This brings us to another Kubernetes resource type, called RecplicaSet. The ReplicaSet holds our desired state of the application and its job is to make sure we have Pods running according to that state.
-So when we delete a Pod, it will create a new one according to the same specification. Take a look at the ReplicaSet:
-
-```
-kubectl get replicaset | grep YOUR_NAME
-```
-
-It outputs along with its age, how many desired, current and ready Pods it has. Take a closer look at its name. The letters and numbers after the name you chose is the same as the first one in the Pod name.
-
-Perhaps we could delete the ReplicaSet, then, before creating the new container? That will not work either.
-Remember the output from run command in the beginning of this section, `deployment "echoserver-YOUR_NAME" created`? The ReplicaSet is controlled by a third Kubernetes resource called Deployment.
-
-```
-kubectl get deployment | grep YOUR_NAME
-```
-
-
-The Deployment will recreate the ReplicaSet if we delete it. What we could do is to delete the deployment. But our original intention was not to delete the app, it was to update it.
+# Deployment
+What we could do is to delete the deployment. But our original intention was not to delete the app, it was to update it.
 Deleting the deployment will result in down time for our users. So lets look at alternatives.
 
 First of all, open a new terminal window and run this command to watch your pod:
