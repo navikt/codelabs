@@ -62,7 +62,7 @@ The connection to the server localhost:8080 was refused - did you specify the ri
 <p>If you want to enable shell autocompletion, you need to run the steps described <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion" target="_blank">here</a>.</p>
 <h3>Access</h3>
 <p>You also need access to the Kubernetes cluster:</p>
-<pre><code>gcloud container clusters get-credentials nais-dev
+<pre><code>gcloud container clusters get-credentials dev-gke
 </code></pre>
 <p>This command will authenticate you against the Kubernetes cluster <code>nais-dev</code>.<br>Verify that you have gained access by running:</p>
 <pre><code>kubectl get pods
@@ -289,7 +289,7 @@ spec:
         <pre><code>kubectl scale deployment --replicas 2 &lt;YOUR_APP&gt;
 kubectl get pod -l app=&lt;YOUR_APP&gt; # Notice you&#39;ve got 2 pods now.
 </code></pre>
-<p>Go to https://.demo.dev-gke.nais.io/ and refresh a couple of times, notice how the hostname changes? This is due to the fatc that<br>we&#39;re being load-balanced between our two pods.</p>
+<p>Go to https://YOUR_APP.demo.dev-gke.nais.io/ and refresh a couple of times, notice how the hostname changes? This is due to the fatc that<br>we&#39;re being load-balanced between our two pods.</p>
 
 
       </google-codelab-step>
