@@ -58,6 +58,7 @@ If you want to enable shell autocompletion, you need to run the steps described 
 You also need access to the Kubernetes cluster:
 ```bash
 gcloud container clusters get-credentials dev-gke
+kubectl config set-context --namespace demo gke_nais-dev-gke_europe-north1-a_dev-gke
 ```
 
 This command will authenticate you against the Kubernetes cluster `nais-dev`.
