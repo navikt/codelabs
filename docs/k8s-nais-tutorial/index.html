@@ -34,22 +34,18 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Prerequisites" duration="3">
+      <google-codelab-step label="Prerequisites" duration="15">
         <ul>
 <li>You must install the <a href="https://cloud.google.com/sdk/docs/downloads-interactive" target="_blank">gcloud-sdk</a> locally on your machine</li>
 <li>Access to a NAIS cluster on Google Cloud Platform</li>
 </ul>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Setup" duration="15">
-        <h2>Google Cloud SDK</h2>
+<h2>Setup</h2>
+<h3>Google Cloud SDK</h3>
 <p>Set up the Google Cloud SDK tool:</p>
 <pre><code>gcloud init
 </code></pre>
 <p>When asked about whether to create a new project, say no.<br>Make sure you answer yes when prompted to let the installer modify your profile to update your <code>PATH</code> in order to get gcloud binary directory added to your path.  Remember to log in with your @nav adress.</p>
-<h2>Kubectl</h2>
+<h3>Kubectl</h3>
 <p>We need to install the Kubernetes command line tool <code>kubectl</code>. If you have installed it, skip this step.<br>Install through the <code>gcloud</code> tool you installed in the first section:</p>
 <pre><code>gcloud components install kubectl
 </code></pre>
@@ -61,7 +57,7 @@ The connection to the server localhost:8080 was refused - did you specify the ri
 <p>Don&#39;t worry about the second line, it just means that we&#39;ve not connected to a cluster yet.<br>You can also install <code>kubectl</code> using the instructions on the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl" target="_blank">Kubernetes documentation</a>.</p>
 <h3>(Optional) Shell autocompletion</h3>
 <p>If you want to enable shell autocompletion, you need to run the steps described <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion" target="_blank">here</a>.</p>
-<h2>Access</h2>
+<h3>Access</h3>
 <p>You also need access to the Kubernetes cluster:</p>
 <pre><code>gcloud container clusters get-credentials CLUSTER_NAME --zone europe/north1-a --project PROJECT_NAME --account YOUR_EMAIL
 </code></pre>
@@ -74,19 +70,16 @@ The connection to the server localhost:8080 was refused - did you specify the ri
 
       </google-codelab-step>
     
-      <google-codelab-step label="Docker" duration="2">
-        <p>Docker is a technology that allows us to package an application with it&#39;s requirements and basic operating system into a container. Read<br>more <a href="https://www.docker.com/resources/what-container" target="_blank">here</a>.  As this tutorials primary focus is kubernetes (which orchestrates<br>containers), we will not dive deeper into Docker, but rather use an already existing docker image called echoserver. Echoserver is a simple<br>web app that responds with some metadata about it&#39;s host and a few key request headers.<br>Echoserver image url: <code>gcr.io/google-containers/echoserver</code></p>
+      <google-codelab-step label="Technologies" duration="2">
+        <h2>Docker</h2>
+<p>Docker is a technology that allows us to package an application with it&#39;s requirements and basic operating system into a container. Read<br>more <a href="https://www.docker.com/resources/what-container" target="_blank">here</a>.  As this tutorials primary focus is kubernetes (which orchestrates<br>containers), we will not dive deeper into Docker, but rather use an already existing docker image called echoserver. Echoserver is a simple<br>web app that responds with some metadata about it&#39;s host and a few key request headers.<br>Echoserver image url: <code>gcr.io/google-containers/echoserver</code></p>
+<h2>Kubernetes</h2>
+<p>Kubernetes is an open-source system for automating deployment, scaling, and management of containerized applications.  It groups containers that make up an application into logical units for easy management and discovery. Kubernetes builds upon 15 years of experience of running production workloads at Google, combined with best-of-breed ideas and practices from the community.</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Kubernetes" duration="2">
-        <p>Kubernetes is an open-source system for automating deployment, scaling, and management of containerized applications.  It groups containers that make up an application into logical units for easy management and discovery. Kubernetes builds upon 15 years of experience of running production workloads at Google, combined with best-of-breed ideas and practices from the community.</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Run your first application" duration="10">
+      <google-codelab-step label="Running your first application" duration="10">
         <p>In this section we will make a pod. We will use an existing application that&#39;s already Dockerized for us.</p>
 <p>A <a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/explore/explore-intro/#kubernetes-pods" target="_blank">pod</a> is a Kubernetes abstraction that<br>represents a group of one or more application containers, and some shared resources for those containers. Those resources include:</p>
 <ul>
@@ -118,12 +111,8 @@ spec:
 <pre><code>kubectl describe pod &lt;YOUR_NAME&gt;
 </code></pre>
 <p>This will list more detailed information about this pod like its labels and the state of the container.</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Upgrading your application" duration="0">
-        <p>There is a newer version of echoserver available, so lets run the new image:</p>
+<h2>Upgrading your application</h2>
+<p>There is a newer version of echoserver available, so lets run the new image:</p>
 <p>Edit the <code>pod.yaml</code> file we created earlier, setting the <code>image</code> field to <code>gcr.io/google-containers/echoserver:1.10</code> resulting in the<br>following contents:</p>
 <pre><code>apiVersion: v1
 kind: Pod
@@ -142,28 +131,20 @@ spec:
 <pre><code>kubectl describe pod &lt;YOUR_NAME&gt;
 </code></pre>
 <p>and look for the <code>Image</code> field and verify it&#39;s value is now <code>gcr.io/google-containers/echoserver:1.10</code></p>
+<h2>Summary</h2>
+<p>In this chapter we&#39;ve created, looked at, and updated a pod. The downside with using pods like we&#39;ve just done is that a pod is bound to a specific server in the cluster and also won&#39;t be able to scale horizontally. In the next chapter, we&#39;ll take a close look at <em>Deployments</em>, which solves these issues.</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Summary" duration="0">
-        <p>In this chapter we&#39;ve created, looked at, and updated a pod. The downside with using pods like we&#39;ve just done is that a pod is bound to a specific server in the cluster and also won&#39;t be able to scale horizontally. In the next chapter, we&#39;ll take a close look at <em>Deployments</em>, which solves these issues.</p>
-<p>Deployment</p>
-<p>Deployments are one of the most central parts in kubernetes.</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Clean up pod" duration="0">
-        <p>Delete your old pod:</p>
+      <google-codelab-step label="Deployment" duration="10">
+        <p>Deployments are one of the most central parts in kubernetes.</p>
+<h2>Delete old pod</h2>
+<p>Delete your old pod:</p>
 <pre><code>kubectl delete pod &lt;YOUR_NAME&gt;
 </code></pre>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Create deployment" duration="0">
-        <p>Deployment is the most common way of running X copies (Pods) of your application. And it supports rolling updates to your container images.<br>The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app.</p>
+<h2>Create deployment</h2>
+<p>Deployment is the most common way of running X copies (Pods) of your application. And it supports rolling updates to your container images.<br>The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app.</p>
 <p>Create a deployment like this <code>deployment.yaml</code>:</p>
 <pre><code>apiVersion: apps/v1
 kind: Deployment
@@ -186,34 +167,28 @@ spec:
         - containerPort: 8080
           protocol: TCP
 </code></pre>
-<p>Let&#39;s go through some of the fields in this resource.</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="|field|description|" duration="0">
-        <p>|spec.template|this is the same as the previous pod spec|<br>|spec.replcas|number of pods to run|<br>|spec.selector|which pods this deployment manages|</p>
+<p>Let&#39;s go through some of the fields in this resource.<br><code>spec.template</code> this is the same as the previous pod spec<br><code>spec.replcas</code> number of pods to run<br><code>spec.selector</code> which pods this deployment manages</p>
 <p>You might also have noticed that the <code>spec.template.metadata</code> does not contain a <code>.name</code> field any more, but instead a <code>metadata.labels.app: &lt;YOUR_NAME</code>. The reason for this is that the pods this Deployment creates will have unique names, and therefore we need some other mechanism to keep track of this deployments pods.</p>
 <p>Let&#39;s apply it and see what happend:</p>
 <pre><code>kubectl apply -f deployment.yaml
 kubectl get pod -l app=&lt;YOUR_NAME&gt; # Uses label selector to get the pods labeled with app=&lt;YOUR_NAME&gt;
 </code></pre>
 <p>There are a lot of features not covered in this tutorial, but you should check out the <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank">Deployment documentation</a></p>
-<p>Connectivity</p>
-<p>The echoserver is an application meant to respond to HTTP requests. Our application is not currently configured for reliable or redundant communication. While it is possible to communicate with it using the POD&#39;s IP address and the containers port (in some network configurations) this is not the recommended way because:</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Connectivity" duration="0">
+        <p>The echoserver is an application meant to respond to HTTP requests. Our application is not currently configured for reliable or redundant communication. While it is possible to communicate with it using the POD&#39;s IP address and the containers port (in some network configurations) this is not the recommended way because:</p>
 <ul>
 <li>a pods IP is not not static</li>
 <li>you won&#39;t be able to load balance</li>
 <li>you get a new pod IP change every time a new POD is created</li>
 </ul>
 <p>The way kubernetes solves this is by using <a href="https://kubernetes.io/docs/concepts/services-networking/service/" target="_blank">services</a></p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Service" duration="0">
-        <p>A Kubernetes Service is an abstraction which defines a logical set of Pods and a policy by which to access them - sometimes called a micro-service. The set of Pods targeted by a Service is (usually) determined by a Label Selector.</p>
-<h2>Creating a Service</h2>
+<h2>Service</h2>
+<p>A Kubernetes Service is an abstraction which defines a logical set of Pods and a policy by which to access them - sometimes called a micro-service. The set of Pods targeted by a Service is (usually) determined by a Label Selector.</p>
+<h3>Creating a Service</h3>
 <p>To make our echoserver availble inside the cluster we would create a <code>service.yaml</code> file like this:</p>
 <pre><code>apiVersion: v1
 kind: Service
@@ -231,13 +206,9 @@ spec:
 <p>This makes it possible for other apps in the cluster to communicate with our app using <code>http://&lt;YOUR_NAME/</code>.</p>
 <h2>Service discovery</h2>
 <p>Every service in kubernetes can be addressed using the service name (<code>&lt;YOUR_NAME&gt;</code>), using the service + namespace (<code>service.namespace</code>), or by using the fully qualified cluster dns (usually <code>service.namespace.svc.cluster.local</code>)</p>
-
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Ingress" duration="0">
-        <p>The <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/" target="_blank">Ingress</a> resource manages external access to the services in a cluster, typically HTTP.</p>
-<h2>Create ingress</h2>
+<h2>Ingress</h2>
+<p>The <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/" target="_blank">Ingress</a> resource manages external access to the services in a cluster, typically HTTP.</p>
+<h3>Create ingress</h3>
 <p>Create a file <code>ingress.yaml</code> with the following contents:</p>
 <pre><code>apiVersion: extensions/v1beta1
 kind: Ingress
