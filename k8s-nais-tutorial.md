@@ -367,7 +367,7 @@ kubectl scale deployment --replicas 2 <YOUR_APP>
 kubectl get pod -l app=<YOUR_APP> # Notice you've got 2 pods now.
 ```
 
-Go to https://YOUR_APP.demo.dev-gke.nais.io/ and refresh a couple of times, notice how the hostname changes? This is due to the fatc that
+Go to https://YOUR_APP.demo.dev-gke.nais.io/ and refresh a couple of times, notice how the hostname changes? This is due to the fact that
 we're being load-balanced between our two pods.
 
 ## Inspect your app
@@ -400,10 +400,24 @@ spec:
 kubectl apply -f app.yaml
 ```
 
-## Logging and metrics
+Take a look at the resources that gets created:
+
+```
+kubectl get all -L app=YOUR_APP
+```
+
+This command will output all recources that is labeled by `app=YOUR_APP`. You might need to run this a couple of times to see everthing.
+
+We have developed and deployed [naiserator](https://github.com/nais/naiserator/) in the cluster. This is the component that created the resouces for you.
 
 ## Clean-up
 Duration 1:00
+
+You can delete your app by running:
+
+```
+kubectl delete application YOUR_APP
+```
 
 ## Further reading
 
