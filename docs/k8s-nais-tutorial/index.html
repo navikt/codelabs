@@ -63,6 +63,7 @@ The connection to the server localhost:8080 was refused - did you specify the ri
 <h3>Access</h3>
 <p>You also need access to the Kubernetes cluster:</p>
 <pre><code>gcloud container clusters get-credentials dev-gke
+kubectl config set-context --namespace demo gke_nais-dev-gke_europe-north1-a_dev-gke
 </code></pre>
 <p>This command will authenticate you against the Kubernetes cluster <code>nais-dev</code>.<br>Verify that you have gained access by running:</p>
 <pre><code>kubectl get pods
