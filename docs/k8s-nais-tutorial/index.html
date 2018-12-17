@@ -42,9 +42,11 @@
 <h2>Setup</h2>
 <h3>Google Cloud SDK</h3>
 <p>Set up the Google Cloud SDK tool:</p>
-<pre><code>gcloud init
+<pre><code>gcloud auth activate-service-account --key-file=sa.json
+gcloud config set compute/region europe-north1
+gcloud config set compute/zone europe-north1-a
+gcloud config set core/project nais-dev-gke
 </code></pre>
-<p>When asked about whether to create a new project, say no.<br>Make sure you answer yes when prompted to let the installer modify your profile to update your <code>PATH</code> in order to get gcloud binary directory added to your path.  Remember to log in with your @nav adress.</p>
 <h3>Kubectl</h3>
 <p>We need to install the Kubernetes command line tool <code>kubectl</code>. If you have installed it, skip this step.<br>Install through the <code>gcloud</code> tool you installed in the first section:</p>
 <pre><code>gcloud components install kubectl
@@ -59,9 +61,9 @@ The connection to the server localhost:8080 was refused - did you specify the ri
 <p>If you want to enable shell autocompletion, you need to run the steps described <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion" target="_blank">here</a>.</p>
 <h3>Access</h3>
 <p>You also need access to the Kubernetes cluster:</p>
-<pre><code>gcloud container clusters get-credentials CLUSTER_NAME --zone europe/north1-a --project PROJECT_NAME --account YOUR_EMAIL
+<pre><code>gcloud container clusters get-credentials nais-dev
 </code></pre>
-<p>This command will authenticate you against the Kubernetes cluster CLUSTER_NAME.<br>Verify that you have gained access by running:</p>
+<p>This command will authenticate you against the Kubernetes cluster <code>nais-dev</code>.<br>Verify that you have gained access by running:</p>
 <pre><code>kubectl get pods
 </code></pre>
 <p>It might not output anything, but as long as it doesn&#39;t give an error, you are all good.</p>
@@ -79,21 +81,21 @@ The connection to the server localhost:8080 was refused - did you specify the ri
 
       </google-codelab-step>
     
-      <google-codelab-step label="Running your first application" duration="10">
-        <p>In this section we will make a pod. We will use an existing application that&#39;s already Dockerized for us.</p>
-<p>A <a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/explore/explore-intro/#kubernetes-pods" target="_blank">pod</a> is a Kubernetes abstraction that<br>represents a group of one or more application containers, and some shared resources for those containers. Those resources include:</p>
+      <google-codelab-step label="Pod" duration="10">
+        <p>In this section we will make a Pod. We will use an existing application that&#39;s already Dockerized for us.</p>
+<p>A <a href="https://kubernetes.io/docs/tutorials/kubernetes-basics/explore/explore-intro/#kubernetes-pods" target="_blank">Pod</a> is a Kubernetes abstraction that<br>represents a group of one or more application containers, and some shared resources for those containers. Those resources include:</p>
 <ul>
 <li>Shared storage, as Volumes</li>
 <li>Networking, as a unique cluster IP address</li>
 <li>Information about how to run each container, such as the container image version or specific ports to use</li>
 </ul>
-<h2>Creating your first pod</h2>
+<h2>Creating your first Pod</h2>
 <p>As we will create multiple files in the tutorial we suggest making a directory <code>$HOME/workshop</code> where you can store your files as you work<br>on them.</p>
 <p>Create a file <code>pod.yaml</code> with the following contents:</p>
 <pre><code>apiVersion: v1
 kind: Pod
 metadata:
-  name: &lt;YOUR_NAME&gt;
+  name: &lt;YOUR_APP&gt;
 spec:
   containers:
   - name: echoserver
@@ -103,21 +105,21 @@ spec:
       protocol: TCP
 </code></pre>
 <p>And run <code>kubectl apply -f pod.yaml</code></p>
-<h2>Checking the status of our new pod</h2>
-<pre><code>kubectl get pod &lt;YOUR_NAME&gt;
+<h2>Checking the status of our new Pod</h2>
+<pre><code>kubectl get pod &lt;YOUR_APP&gt;
 </code></pre>
-<p>You can see the status of your pod, ready containers, restarts and the age of the pod.</p>
-<p>Lets take a closer look at the pod we created:</p>
-<pre><code>kubectl describe pod &lt;YOUR_NAME&gt;
+<p>You can see the status of your Pod, ready containers, restarts and the age of the Pod.</p>
+<p>Lets take a closer look at the Pod we created:</p>
+<pre><code>kubectl describe pod &lt;YOUR_APP&gt;
 </code></pre>
-<p>This will list more detailed information about this pod like its labels and the state of the container.</p>
+<p>This will list more detailed information about this Pod like its labels and the state of the container.</p>
 <h2>Upgrading your application</h2>
 <p>There is a newer version of echoserver available, so lets run the new image:</p>
 <p>Edit the <code>pod.yaml</code> file we created earlier, setting the <code>image</code> field to <code>gcr.io/google-containers/echoserver:1.10</code> resulting in the<br>following contents:</p>
 <pre><code>apiVersion: v1
 kind: Pod
 metadata:
-  name: &lt;YOUR_NAME&gt;
+  name: &lt;YOUR_APP&gt;
 spec:
   containers:
   - name: echoserver
@@ -128,37 +130,36 @@ spec:
 </code></pre>
 <p>Then run <code>kubectl apply -f pod.yaml</code></p>
 <p>Lets verify that it is updated:</p>
-<pre><code>kubectl describe pod &lt;YOUR_NAME&gt;
+<pre><code>kubectl describe pod &lt;YOUR_APP&gt;
 </code></pre>
 <p>and look for the <code>Image</code> field and verify it&#39;s value is now <code>gcr.io/google-containers/echoserver:1.10</code></p>
 <h2>Summary</h2>
-<p>In this chapter we&#39;ve created, looked at, and updated a pod. The downside with using pods like we&#39;ve just done is that a pod is bound to a specific server in the cluster and also won&#39;t be able to scale horizontally. In the next chapter, we&#39;ll take a close look at <em>Deployments</em>, which solves these issues.</p>
+<p>In this chapter we&#39;ve created, looked at, and updated a Pod. The downside with using pods like we&#39;ve just done is that a Pod is bound to a specific server in the cluster,  won&#39;t be able to scale horizontally, and the fact that Pods are <em>mortal</em>, meaning they can die. In the next chapter, we&#39;ll take a close look at <em>Deployments</em>, which solves all of these issues.</p>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Deployment" duration="10">
-        <p>Deployments are one of the most central parts in kubernetes.</p>
-<h2>Delete old pod</h2>
-<p>Delete your old pod:</p>
-<pre><code>kubectl delete pod &lt;YOUR_NAME&gt;
+        <p>Deployments are the most common way of running Pods of your application. And it supports features like rolling updates, scaling and more.<br>The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a Pod for your app.</p>
+<h2>Delete old Pod</h2>
+<p>Delete your old Pod:</p>
+<pre><code>kubectl delete pod &lt;YOUR_APP&gt;
 </code></pre>
 <h2>Create deployment</h2>
-<p>Deployment is the most common way of running X copies (Pods) of your application. And it supports rolling updates to your container images.<br>The resource contains information about what Docker image to spin up in a container, environment variables and all the information Kubernetes needs to create a pod for your app.</p>
 <p>Create a deployment like this <code>deployment.yaml</code>:</p>
 <pre><code>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: &lt;YOUR_NAME&gt;
+  name: &lt;YOUR_APP&gt;
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: &lt;YOUR_NAME&gt;
+      app: &lt;YOUR_APP&gt;
   template:
     metadata:
       labels:
-        app: &lt;YOUR_NAME&gt;
+        app: &lt;YOUR_APP&gt;
     spec:
       containers:
       - name: nais-testapp
@@ -167,23 +168,23 @@ spec:
         - containerPort: 8080
           protocol: TCP
 </code></pre>
-<p>Let&#39;s go through some of the fields in this resource.<br><code>spec.template</code> this is the same as the previous pod spec<br><code>spec.replcas</code> number of pods to run<br><code>spec.selector</code> which pods this deployment manages</p>
-<p>You might also have noticed that the <code>spec.template.metadata</code> does not contain a <code>.name</code> field any more, but instead a <code>metadata.labels.app: &lt;YOUR_NAME</code>. The reason for this is that the pods this Deployment creates will have unique names, and therefore we need some other mechanism to keep track of this deployments pods.</p>
+<p>Let&#39;s go through some of the fields in this resource.<br><code>spec.template</code> this is almost the same as the pod we wrote in the previous chapter.<br><code>spec.replicas</code> number of pods to run<br><code>spec.selector</code> which pods this deployment manages</p>
+<p>You might also have noticed that the <code>spec.template.metadata</code> does not contain a <code>.name</code> field any more, but instead a <code>metadata.labels.app: &lt;YOUR_APP</code>. The reason for this is that the pods this Deployment creates will have unique, auto-generated names, and therefore we need some other mechanism to keep track of this deployments pods (labels).</p>
 <p>Let&#39;s apply it and see what happend:</p>
 <pre><code>kubectl apply -f deployment.yaml
-kubectl get pod -l app=&lt;YOUR_NAME&gt; # Uses label selector to get the pods labeled with app=&lt;YOUR_NAME&gt;
+kubectl get pod -l app=&lt;YOUR_APP&gt; # Uses label selector to get the pods labeled with app=&lt;YOUR_NAME&gt;
 </code></pre>
 <p>There are a lot of features not covered in this tutorial, but you should check out the <a href="https://kubernetes.io/docs/concepts/workloads/controllers/deployment/" target="_blank">Deployment documentation</a></p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Connectivity" duration="0">
-        <p>The echoserver is an application meant to respond to HTTP requests. Our application is not currently configured for reliable or redundant communication. While it is possible to communicate with it using the POD&#39;s IP address and the containers port (in some network configurations) this is not the recommended way because:</p>
+      <google-codelab-step label="Service" duration="0">
+        <p>The echoserver is an application meant to respond to HTTP requests. Our application is not currently configured for reliable or redundant communication. While it is possible to communicate with it using the Pod&#39;s IP address and the containers port (in some network configurations) this is not the recommended way because:</p>
 <ul>
 <li>a pods IP is not not static</li>
 <li>you won&#39;t be able to load balance</li>
-<li>you get a new pod IP change every time a new POD is created</li>
+<li>you get a new Pod IP change every time a new Pod is created</li>
 </ul>
 <p>The way kubernetes solves this is by using <a href="https://kubernetes.io/docs/concepts/services-networking/service/" target="_blank">services</a></p>
 <h2>Service</h2>
@@ -193,7 +194,7 @@ kubectl get pod -l app=&lt;YOUR_NAME&gt; # Uses label selector to get the pods l
 <pre><code>apiVersion: v1
 kind: Service
 metadata:
-  name: &lt;YOUR_NAME&gt;
+  name: &lt;YOUR_APP&gt;
 spec:
   type: ClusterIP
   ports:
@@ -201,106 +202,101 @@ spec:
     protocol: TCP
     targetPort: 8080
   selector:
-    app: &lt;YOUR_NAME&gt;
+    app: &lt;YOUR_APP&gt;
 </code></pre>
-<p>This makes it possible for other apps in the cluster to communicate with our app using <code>http://&lt;YOUR_NAME/</code>.</p>
+<p>This makes it possible for other apps in the cluster to communicate with our app using <code>http://&lt;YOUR_APP/</code>.</p>
 <h2>Service discovery</h2>
-<p>Every service in kubernetes can be addressed using the service name (<code>&lt;YOUR_NAME&gt;</code>), using the service + namespace (<code>service.namespace</code>), or by using the fully qualified cluster dns (usually <code>service.namespace.svc.cluster.local</code>)</p>
-<h2>Ingress</h2>
-<p>The <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/" target="_blank">Ingress</a> resource manages external access to the services in a cluster, typically HTTP.</p>
-<h3>Create ingress</h3>
+<p>Every service in kubernetes can be addressed using the service name (<code>&lt;YOUR_APP&gt;</code>), using the service + namespace (<code>service.namespace</code>), or by using the fully qualified cluster dns (usually <code>service.namespace.svc.cluster.local</code>)</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Ingress" duration="0">
+        <p>The <a href="https://kubernetes.io/docs/concepts/services-networking/ingress/" target="_blank">Ingress</a> resource manages external access to the services in a cluster, typically HTTP.</p>
+<h2>Create ingress</h2>
 <p>Create a file <code>ingress.yaml</code> with the following contents:</p>
 <pre><code>apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  annotations:
-  name: &lt;YOUR_NAME&gt;
+  name: &lt;YOUR_APP&gt;
 spec:
   rules:
-  - host: &lt;YOUR_NAME&gt;.demo.dev-gke.nais.io
+  - host: &lt;YOUR_APP&gt;.demo.dev-gke.nais.io
     http:
       paths:
       - backend:
-          serviceName: &lt;YOUR_NAME&gt;
+          serviceName: &lt;YOUR_APP&gt;
           servicePort: 80
         path: /
 </code></pre>
 <p>Notice that we target a service by name here, not labels.</p>
 <p>apply it <code>kubectl apply -f ingress.yaml</code></p>
-<p>This should enable you to access your echoserver using the following address: <code>https://&lt;YOUR_NAME&gt;.demo.dev-gke.nais.io</code>, try it out:</p>
-<pre><code>curl https://&lt;YOUR_NAME&gt;.demo.dev-gke.nais.io
+<p>This should enable you to access your echoserver using the following address: <code>https://&lt;YOUR_APP&gt;.demo.dev-gke.nais.io</code>, try it out:</p>
+<pre><code>curl http://&lt;YOUR_APP&gt;.demo.dev-gke.nais.io
 </code></pre>
 
 
       </google-codelab-step>
     
       <google-codelab-step label="Rolling update" duration="5">
-        <p>Let&#39;s say we wanted to set an environment variable in our pods, but don&#39;t want to interrupt the availability of our app.<br>// Update<br>In terminal window watching the pods, you will see that old pod is terminating at once, while the new ones are initializing. This means that we did not achieve update without the application being down. Keep this window open.</p>
-<p>In the previous section, we managed to run our application on Kubernetes, and while thats good and all, we need a more robust way to deploy an application.</p>
-<pre><code>kubectl describe deployment tutorial-YOUR_NAME
+        <p>In this chapter we&#39;ll take a look a thow we can roll out updates without interrupting the availability of our app.</p>
+<h2>Adding a label</h2>
+<p>Let&#39;s say we wanted to add a new label to our pods, let&#39;s give it a try.</p>
+<p>In your <code>deployment.yaml</code><br>Set <code>spec.template.metadata.labels.important</code> to <code>obviously</code></p>
+<p>The metadata part of the template should something look like this:</p>
+<pre><code>  template:
+    metadata:
+      labels:
+        app: &lt;YOUR_APP&gt;
+        important: obviously
 </code></pre>
-<h2>Write the configuration file</h2>
-<p>The first time we deployed the application on Kubernetes, we used the <code>kubectl run</code> command. This time we will write a configuration file which we will apply in the cluster.</p>
-<p>Create a file with the name <code>deployment.yaml</code>.</p>
-<p>In this yaml file, we will describe the desired state for our application.</p>
+<p>Now, apply the deployment: <code>kubectl apply -f deployment.yaml; kubectl get pods -l app=&lt;YOUR_APP&gt;</code><br>You should see two pods, one in the &#34;ContainerCreating&#34; state and one &#34;Running&#34;. This is due to the fact that de default deployment strategy in kubernetes is &#34;RollingUpdate&#34;, you can check this by issuing: <code>kubectl describe deployment &lt;YOUR_APP&gt;</code> and looking at the fields <code>StrategyType</code> and <code>RollingUpdateStrategy</code></p>
+<p>If the application you&#39;re running has 0ms startup time, this would be enough for zero downtime updates, however most apps need some time to warm up before they can start serving requests.</p>
+<p>Enter Readiness probes.</p>
+<h2>Readiness probe</h2>
+<p>Modify your <code>deployment.yaml</code> adding a readiness probe</p>
 <pre><code>apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: NAME
+  name: &lt;YOUR_APP&gt;
 spec:
-  replicas: NUMBER_OF_COPIES
+  replicas: 1
   selector:
     matchLabels:
-      app: MATCH_LABEL
+      app: &lt;YOUR_APP&gt;
   template:
     metadata:
       labels:
-        app: MATCH_LABEL
+        app: &lt;YOUR_APP&gt;
     spec:
       containers:
-      - name: CONTAINER_NAME
-        image: DOCKER_IMAGE
+      - name: nais-testapp
+        image: gcr.io/google-containers/echoserver:1.10
         ports:
-        - containerPort: CONTAINER_PORT
+        - containerPort: 8080
+          protocol: TCP
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
 </code></pre>
-<p>We need to add more information, so lets go ahead and add our Docker image.<br>Set the field <code>spec.template.spec.containers.image</code> to <code>gcr.io/google-containers/echoserver:1.10</code>.</p>
-<p>Replicas: 3</p>
-<p>We also need to set some metadata and labels:</p>
-<ul>
-<li>Set <code>metadata.name</code> to a what ever you want to name your app<br>This is the name for the Kubernetes resources created when you apply this file in a cluster.</li>
-<li>Set <code>metadata.labels.app</code> to for example <code>yourname-app</code>.<br>This label will</li>
-<li>Set the same app label to the fields<code>spec.selector.matchLabels.app</code> and <code>spec.template.metadata.labels</code></li>
-</ul>
-<p>On the last line in the file, you see that we have set the <code>containerPort</code> to <code>80</code>, which will open that port on the Pod so that we can send traffic to the container.</p>
-<p>Apply the file:</p>
-<pre><code>kubectl apply -f deployment.yaml
-</code></pre>
-<p>And watch the update of the Pods in the other terminal window.</p>
-<p>Notice that the new Pods have names with different IDs.</p>
-<p>// Inspect the replicasets to see that that the deployment created a new one</p>
-<h2>Health checks</h2>
-<p>// helsesjekk, 1 replica = ikke nedefri deployment, neste 3 replicas. Videre til services, så vi veit hvilken ip vi skal gå mot</p>
 
 
       </google-codelab-step>
     
-      <google-codelab-step label="Kubernetes service" duration="3">
-        <p>Run the command to list pods, but this time add the flag <code>-o wide</code> in order to get more information:</p>
-<pre><code>kubectl get pods -o wide | grep YOUR_NAME
+      <google-codelab-step label="Scaling" duration="0">
+        <pre><code>kubectl scale deployment --replicas 2 &lt;YOUR_APP&gt;
+kubectl get pod -l app=&lt;YOUR_APP&gt; # Notice you&#39;ve got 2 pods now.
 </code></pre>
-<p>Notice that the Pods have an internal IP and hopefully the status <code>Running</code>.</p>
-<p>One of the features of a Pod, is that it is mortal, which also means that we cannot rely on the IP address.</p>
+<p>Go to https://.demo.dev-gke.nais.io/ and refresh a couple of times, notice how the hostname changes? This is due to the fatc that<br>we&#39;re being load-balanced between our two pods.</p>
 
-
-      </google-codelab-step>
-    
-      <google-codelab-step label="Ingress" duration="0">
-        
 
       </google-codelab-step>
     
       <google-codelab-step label="Inspect your app" duration="0">
-        
+        <h2>Logs</h2>
+<p>As long as your app logs to <code>stdout</code> the logs are available by using <code>kubectl logs &lt;POD_NAME&gt;</code></p>
+
 
       </google-codelab-step>
     
