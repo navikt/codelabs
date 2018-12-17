@@ -57,7 +57,7 @@ If you want to enable shell autocompletion, you need to run the steps described 
 #### Access
 You also need access to the Kubernetes cluster:
 ```bash
-gcloud container clusters get-credentials nais-dev
+gcloud container clusters get-credentials dev-gke
 ```
 
 This command will authenticate you against the Kubernetes cluster `nais-dev`.
@@ -335,7 +335,7 @@ kubectl scale deployment --replicas 2 <YOUR_APP>
 kubectl get pod -l app=<YOUR_APP> # Notice you've got 2 pods now.
 ```
 
-Go to https://<YOUR_APP>.demo.dev-gke.nais.io/ and refresh a couple of times, notice how the hostname changes? This is due to the fatc that
+Go to https://YOUR_APP.demo.dev-gke.nais.io/ and refresh a couple of times, notice how the hostname changes? This is due to the fatc that
 we're being load-balanced between our two pods.
 
 ## Inspect your app
