@@ -378,6 +378,28 @@ As long as your app logs to `stdout` the logs are available by using `kubectl lo
 ## NAIS
 Duration: 5:00
 
+Write file: `app.yaml` with contents:
+```
+apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: <YOUR_APP>
+spec:
+  image: gcr.io/google-containers/echoserver:1.10
+  port: 8080
+  liveness:
+    path: /
+  readiness:
+    path: /
+  env:
+    - name: ENV_NAME
+      value: "value"
+```
+
+```
+kubectl apply -f app.yaml
+```
+
 ## Logging and metrics
 
 ## Clean-up

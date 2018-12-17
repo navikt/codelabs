@@ -106,6 +106,7 @@ spec:
     - containerPort: 8080
       protocol: TCP
 </code></pre>
+<p>Replace <code>YOUR_APP</code> with a good name for your application, for example your name followed by <code>demo-app</code>.</p>
 <p>And run <code>kubectl apply -f pod.yaml</code></p>
 <h2>Checking the status of our new Pod</h2>
 <pre><code>kubectl get pod &lt;YOUR_APP&gt;
@@ -207,6 +208,7 @@ spec:
     app: &lt;YOUR_APP&gt;
 </code></pre>
 <p>This makes it possible for other apps in the cluster to communicate with our app using <code>http://&lt;YOUR_APP/</code>.</p>
+<p>Run the <code>kubectl apply -f service.yaml</code> command to apply this file.</p>
 <h2>Service discovery</h2>
 <p>Every service in kubernetes can be addressed using the service name (<code>&lt;YOUR_APP&gt;</code>), using the service + namespace (<code>service.namespace</code>), or by using the fully qualified cluster dns (usually <code>service.namespace.svc.cluster.local</code>)</p>
 
@@ -263,7 +265,7 @@ spec:
       </google-codelab-step>
     
       <google-codelab-step label="Rolling update" duration="5">
-        <p>In this chapter we&#39;ll take a look a thow we can roll out updates without interrupting the availability of our app.</p>
+        <p>In this chapter we&#39;ll take a look a how we can roll out updates without interrupting the availability of our app.</p>
 <h2>Adding a label</h2>
 <p>Let&#39;s say we wanted to add a new label to our pods, let&#39;s give it a try.</p>
 <p>In your <code>deployment.yaml</code><br>Set <code>spec.template.metadata.labels.important</code> to <code>obviously</code></p>
@@ -325,7 +327,25 @@ kubectl get pod -l app=&lt;YOUR_APP&gt; # Notice you&#39;ve got 2 pods now.
       </google-codelab-step>
     
       <google-codelab-step label="NAIS" duration="5">
-        
+        <p>Write file: <code>app.yaml</code> with contents:</p>
+<pre><code>apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: &lt;YOUR_APP&gt;
+spec:
+  image: gcr.io/google-containers/echoserver:1.10
+  port: 8080
+  liveness:
+    path: /
+  readiness:
+    path: /
+  env:
+    - name: ENV_NAME
+      value: &#34;value&#34;
+</code></pre>
+<pre><code>kubectl apply -f app.yaml
+</code></pre>
+
 
       </google-codelab-step>
     
