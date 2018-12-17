@@ -26,6 +26,8 @@ Duration: 3:00
 Duration: 15:00
 
 #### Google Cloud SDK
+Get sa.json file from Vegar or Line.
+
 Set up the Google Cloud SDK tool:
 ```bash
 gcloud auth activate-service-account --key-file=sa.json
