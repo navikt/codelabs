@@ -115,6 +115,9 @@ spec:
     - containerPort: 8080
       protocol: TCP
 ```
+
+Replace `YOUR_APP` with a good name for your application, for example your name followed by `demo-app`.
+
 And run `kubectl apply -f pod.yaml`
 
 ### Checking the status of our new Pod
