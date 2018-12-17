@@ -244,6 +244,8 @@ spec:
 ```
 This makes it possible for other apps in the cluster to communicate with our app using `http://<YOUR_APP/`.
 
+Run the `kubectl apply -f service.yaml` command to apply this file.
+
 ### Service discovery
 Every service in kubernetes can be addressed using the service name (`<YOUR_APP>`), using the service + namespace (`service.namespace`), or by using the fully qualified cluster dns (usually `service.namespace.svc.cluster.local`)
 
