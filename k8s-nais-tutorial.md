@@ -276,7 +276,9 @@ curl http://<YOUR_APP>.demo.dev-gke.nais.io
 ## Rolling update
 Duration: 5:00
 
-In this chapter we'll take a look a thow we can roll out updates without interrupting the availability of our app.
+In this chapter we'll take a look a how we can roll out updates without interrupting the availability of our app.
+
+
 
 ### Adding a label
 Let's say we wanted to add a new label to our pods, let's give it a try.
