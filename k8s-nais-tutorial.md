@@ -408,7 +408,11 @@ kubectl get all -L app=YOUR_APP
 
 This command will output all recources that is labeled by `app=YOUR_APP`. You might need to run this a couple of times to see everthing.
 
+### Naiserator
+
 We have developed and deployed [naiserator](https://github.com/nais/naiserator/) in the cluster. This is the component that created the resouces for you.
+
+Check out the file [naiserator-max.yaml](https://github.com/nais/naiserator/blob/master/examples/nais-max.yaml) to see all features and possibilities provided by naiserator.
 
 ## Clean-up
 Duration 1:00
