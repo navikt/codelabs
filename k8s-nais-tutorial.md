@@ -115,6 +115,9 @@ spec:
     - containerPort: 8080
       protocol: TCP
 ```
+
+Replace `YOUR_APP` with a good name for your application, for example your name followed by `demo-app`.
+
 And run `kubectl apply -f pod.yaml`
 
 ### Checking the status of our new Pod
@@ -241,6 +244,8 @@ spec:
 ```
 This makes it possible for other apps in the cluster to communicate with our app using `http://<YOUR_APP/`.
 
+Run the `kubectl apply -f service.yaml` command to apply this file.
+
 ### Service discovery
 Every service in kubernetes can be addressed using the service name (`<YOUR_APP>`), using the service + namespace (`service.namespace`), or by using the fully qualified cluster dns (usually `service.namespace.svc.cluster.local`)
 
@@ -300,7 +305,9 @@ spec:
 ## Rolling update
 Duration: 5:00
 
-In this chapter we'll take a look a thow we can roll out updates without interrupting the availability of our app.
+In this chapter we'll take a look a how we can roll out updates without interrupting the availability of our app.
+
+
 
 ### Adding a label
 Let's say we wanted to add a new label to our pods, let's give it a try.
