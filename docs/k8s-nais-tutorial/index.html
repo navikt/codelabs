@@ -236,6 +236,28 @@ spec:
 <p>This should enable you to access your echoserver using the following address: <code>https://&lt;YOUR_APP&gt;.demo.dev-gke.nais.io</code>, try it out:</p>
 <pre><code>curl http://&lt;YOUR_APP&gt;.demo.dev-gke.nais.io
 </code></pre>
+<h2>Enable tls on your app</h2>
+<pre><code>apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: &#34;true&#34;
+    kubernetes.io/tls-acme: &#34;true&#34;
+  name: &lt;YOUR_APP&gt;
+spec:
+  rules:
+  - host: &lt;YOUR_APP&gt;.demo.dev-gke.nais.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: &lt;YOUR_APP&gt;
+          servicePort: 80
+  tls:
+    - hosts:
+      - &lt;YOUR_APP&gt;.demo.dev-gke.nais.io
+      secretName: &lt;YOUR_APP&gt;-tls
+</code></pre>
 
 
       </google-codelab-step>

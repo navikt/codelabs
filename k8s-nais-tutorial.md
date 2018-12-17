@@ -273,6 +273,30 @@ This should enable you to access your echoserver using the following address: `h
 curl http://<YOUR_APP>.demo.dev-gke.nais.io
 ```
 
+### Enable tls on your app
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/tls-acme: "true"
+  name: <YOUR_APP>
+spec:
+  rules:
+  - host: <YOUR_APP>.demo.dev-gke.nais.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: <YOUR_APP>
+          servicePort: 80
+  tls:
+    - hosts:
+      - <YOUR_APP>.demo.dev-gke.nais.io
+      secretName: <YOUR_APP>-tls
+```
+
 ## Rolling update
 Duration: 5:00
 
