@@ -394,6 +394,8 @@ spec:
   env:
     - name: ENV_NAME
       value: "value"
+  ingresses: 
+    - "https://<YOUR_APP>.demo.dev-gke.nais.io"
 ```
 
 ```
@@ -403,10 +405,18 @@ kubectl apply -f app.yaml
 Take a look at the resources that gets created:
 
 ```
-kubectl get all -L app=YOUR_APP
+kubectl get all -l app=YOUR_APP
 ```
 
 This command will output all recources that is labeled by `app=YOUR_APP`. You might need to run this a couple of times to see everthing.
+
+### Visit your app
+
+Run a new curl to see that your app is running:
+
+```bash
+curl http://<YOUR_APP>.demo.dev-gke.nais.io
+```
 
 ### Naiserator
 

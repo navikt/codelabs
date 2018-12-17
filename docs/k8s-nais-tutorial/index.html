@@ -342,13 +342,19 @@ spec:
   env:
     - name: ENV_NAME
       value: &#34;value&#34;
+  ingresses: 
+    - &#34;https://&lt;YOUR_APP&gt;.demo.dev-gke.nais.io&#34;
 </code></pre>
 <pre><code>kubectl apply -f app.yaml
 </code></pre>
 <p>Take a look at the resources that gets created:</p>
-<pre><code>kubectl get all -L app=YOUR_APP
+<pre><code>kubectl get all -l app=YOUR_APP
 </code></pre>
 <p>This command will output all recources that is labeled by <code>app=YOUR_APP</code>. You might need to run this a couple of times to see everthing.</p>
+<h2>Visit your app</h2>
+<p>Run a new curl to see that your app is running:</p>
+<pre><code>curl http://&lt;YOUR_APP&gt;.demo.dev-gke.nais.io
+</code></pre>
 <h2>Naiserator</h2>
 <p>We have developed and deployed <a href="https://github.com/nais/naiserator/" target="_blank">naiserator</a> in the cluster. This is the component that created the resouces for you.</p>
 <p>Check out the file <a href="https://github.com/nais/naiserator/blob/master/examples/nais-max.yaml" target="_blank">naiserator-max.yaml</a> to see all features and possibilities provided by naiserator.</p>
