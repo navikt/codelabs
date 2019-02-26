@@ -52,17 +52,37 @@
 <pre><code>git clone https://github.com/navikt/codelab-kafka-clients.git
 </code></pre>
 <p>In project root, run gradle:</p>
-<pre><code>$ cd kafka-clients
-$ ./gradlew build
+<pre><code>$ cd codelab-kafka-clients
+$ ./gradlew --offline build
+</code></pre>
+<p>or in Windows:</p>
+<pre><code>$ cd codelab-kafka-clients
+$ gradlew.bat --offline build
 </code></pre>
 <p>If everything is set up you should see</p>
 <pre><code>BUILD SUCCESSFUL in Xs
 </code></pre>
+<aside class="warning"><p>On NAV developer image: If you get an <code>Connection refused</code> error when executing gradle.</p>
+</aside>
+<p>Add a file named <code>gradle.properties</code> in an folder named <code>.gradle</code> in your home directory with the following content:</p>
+<pre><code>systemProp.proxySet=true
+systemProp.http.proxyHost=webproxy-utvikler.nav.no
+systemProp.http.proxyPort=8088
+systemProp.https.proxyHost=webproxy-utvikler.nav.no
+systemProp.https.proxyPort=8088
+</code></pre>
+<p>Windows: <code>C:\Users\&lt;username&gt;\.gradle\gradle.properties</code><br>Linux and Mac: <code>~/.gradle/gradle.properties</code></p>
 <h2>Docker</h2>
 <p>In the project directory, there is a <code>docker-compose.yml</code> file, navigate to the file and run docker-compose:</p>
 <pre><code>$ docker-compose up
 </code></pre>
 <p>This should start Zookeeper and a Kafka instance locally.</p>
+<h2>IntelliJ</h2>
+<ul>
+<li>Open the project in IntelliJ by choosing: <code>File -&gt; New -&gt; Project from Existing sources...</code> navigate to project folder and press OK</li>
+<li>Choose <code>Gradle</code> in next window - Next</li>
+<li>Underneath <code>Global Gradle settings</code> - choose <code>Offline work</code> and hit <code>Finish</code></li>
+</ul>
 
 
       </google-codelab-step>
@@ -133,8 +153,29 @@ $ ./gradlew build
 
       </google-codelab-step>
     
-      <google-codelab-step label="FizzBuzz" duration="0">
-        
+      <google-codelab-step label="Calculate FizzBuzz and produce the answer to kafka" duration="30">
+        <p>Provided in the project there is an FizzBuzz &#34;calculator&#34; we can use to calculate the answer.</p>
+<pre><code>      while (true) {
+          ConsumerRecords&lt;String, Integer&gt; records = consumer.poll(Duration.ofMillis(100)); // Fetch records, give up after timeout
+          for (ConsumerRecord&lt;String, Integer&gt; record : records) {
+              System.out.println(&#34;Consumed &#34; + record);
+              // first extract the number from the record
+              Integer number = record.value();
+              // Calculate FizzBuzz
+              String fizzBuzzCandidate = FizzBuzz.calculate(number);
+              FizzBuzzAnswerMessage answer = new FizzBuzzAnswerMessage(fizzBuzzCandidate, number, &#34;A-Team&#34;);
+              
+              // create json 
+              final String answerAsJson = new Gson().newBuilder().create().toJson(answer);
+              
+              // @todo: Produce answer to `FizzBuzzAnswered` topic
+              
+              // tip: See FizzBuzzCandidateProducer.java 
+              
+          }
+      }
+</code></pre>
+
 
       </google-codelab-step>
     

@@ -45,8 +45,15 @@ git clone https://github.com/navikt/codelab-kafka-clients.git
 In project root, run gradle:
 
 ``` bash
-$ cd kafka-clients
-$ ./gradlew build
+$ cd codelab-kafka-clients
+$ ./gradlew --offline build
+```
+
+or in Windows:
+
+``` bash
+$ cd codelab-kafka-clients
+$ gradlew.bat --offline build
 ```
 
 If everything is set up you should see
@@ -54,6 +61,23 @@ If everything is set up you should see
 ``` bash
 BUILD SUCCESSFUL in Xs
 ```
+
+Negative
+: On NAV developer image: If you get an `Connection refused` error when executing gradle.
+
+Add a file named `gradle.properties` in an folder named `.gradle` in your home directory with the following content:
+
+```@bash
+systemProp.proxySet=true
+systemProp.http.proxyHost=webproxy-utvikler.nav.no
+systemProp.http.proxyPort=8088
+systemProp.https.proxyHost=webproxy-utvikler.nav.no
+systemProp.https.proxyPort=8088
+```
+
+Windows: `C:\Users\<username>\.gradle\gradle.properties`
+Linux and Mac: `~/.gradle/gradle.properties`
+
 
 ### Docker
 
@@ -64,6 +88,12 @@ $ docker-compose up
 ```
 
 This should start Zookeeper and a Kafka instance locally.
+
+### IntelliJ 
+
+* Open the project in IntelliJ by choosing: `File -> New -> Project from Existing sources...` navigate to project folder and press OK
+* Choose `Gradle` in next window - Next
+* Underneath `Global Gradle settings` - choose `Offline work` and hit `Finish`
 
 ## Fizz-buzz game with Kafka
 Duration: 3:00
@@ -98,7 +128,7 @@ Duration: 10:00
 * In IntelliJ - Create a new Java file, give it a name (e.g. `FizzBuzzNumberEnteredConsumer.java`)
 * We need to declare a `KafkaConsumer` and instantiate it;
 
-```java
+```@java
 public class FizzBuzzNumberEnteredConsumer {
 
     private final static String TOPIC = "FizzBuzzNumberEntered";
@@ -122,7 +152,7 @@ public class FizzBuzzNumberEnteredConsumer {
 
 * The above code is enough to configure a Kafka-consumer against a broker.  But in order to consume messages we need a few more lines of code:
 
-```java
+```@java
       while (true) {
           ConsumerRecords<String, Integer> records = consumer.poll(Duration.ofMillis(100)); // Fetch records, give up after timeout
           for (ConsumerRecord<String, Integer> record : records) {
@@ -133,4 +163,29 @@ public class FizzBuzzNumberEnteredConsumer {
 
 * We should now be able to consume records from Kafka. Try it out by first start the consumer we just created (Run the main method in IntelliJ) and then start the producer, `FizzBuzzCandidateProducer` (Run the main method in IntelliJ). If all looks good, go ahead to the next section.
 
-## FizzBuzz
+## Calculate FizzBuzz and produce the answer to kafka
+Duration: 30:00
+
+Provided in the project there is an FizzBuzz "calculator" we can use to calculate the answer. 
+
+```@java
+      while (true) {
+          ConsumerRecords<String, Integer> records = consumer.poll(Duration.ofMillis(100)); // Fetch records, give up after timeout
+          for (ConsumerRecord<String, Integer> record : records) {
+              System.out.println("Consumed " + record);
+              // first extract the number from the record
+              Integer number = record.value();
+              // Calculate FizzBuzz
+              String fizzBuzzCandidate = FizzBuzz.calculate(number);
+              FizzBuzzAnswerMessage answer = new FizzBuzzAnswerMessage(fizzBuzzCandidate, number, "A-Team");
+              
+              // create json 
+              final String answerAsJson = new Gson().newBuilder().create().toJson(answer);
+              
+              // @todo: Produce answer to `FizzBuzzAnswered` topic
+              
+              // tip: See FizzBuzzCandidateProducer.java 
+              
+          }
+      }
+```
