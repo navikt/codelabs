@@ -90,6 +90,15 @@ $ docker-compose up
 
 This should start Zookeeper and a Kafka instance locally.
 
+#### Docker "connection refused" 
+
+On NAV developer image you will need to configure proxy for docker. Open Docker and Settings:
+
+* Tick "Manual proxy configuration"
+* Use `http://webproxy-utvikler.nav.no:8088` on both HTTP and HTTPS field
+
+![Proxy settings for NAV Windows developer image](img/docker-win-proxy.png "Proxy settings for NAV Windows developer image")
+
 ### IntelliJ 
 
 * Open the project in IntelliJ by choosing: `File -> New -> Project from Existing sources...` navigate to project folder and press OK
