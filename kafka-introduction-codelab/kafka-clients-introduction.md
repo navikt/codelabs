@@ -200,3 +200,9 @@ Provided in the project there is an FizzBuzz "calculator" we can use to calculat
       }
 ```
 
+
+Tip, you can consume messages from command line by running: 
+
+```docker run --net host confluentinc/cp-kafka kafka-console-consumer --bootstrap-server localhost:9092 -topic FizzBuzzAnswered```
+
+
