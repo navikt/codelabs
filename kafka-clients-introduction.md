@@ -37,7 +37,8 @@ Duration: 5:00
 
 [Download project](https://github.com/navikt/codelab-kafka-clients/archive/master.zip)
 
-Extract the project to a directory. An alternative, use git to clone the project.
+Extract the project to a directory. An alternative, use git to clone the project. 
+(On NAV developer image you will need add proxy by running ```git config --global http.proxy http://webproxy-utvikler.nav.no:8088``` first)
 ``` bash
 git clone https://github.com/navikt/codelab-kafka-clients.git
 ```
@@ -189,3 +190,4 @@ Provided in the project there is an FizzBuzz "calculator" we can use to calculat
           }
       }
 ```
+
