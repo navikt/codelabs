@@ -201,8 +201,9 @@ Provided in the project there is an FizzBuzz "calculator" we can use to calculat
 ```
 
 
-Tip, you can consume messages from command line by running: 
+Tip, Kafka also has a command line consumer that will dump out messages to standard output, by running:  
 
 `docker run --net host confluentinc/cp-kafka kafka-console-consumer --bootstrap-server localhost:9092 -topic FizzBuzzAnswered`
+
 
 
