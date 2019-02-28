@@ -26,7 +26,7 @@ Duration: 10:00
 * Internet connectivity
 * Java SKD installed - see [https://www.oracle.com/technetwork/java/javase/downloads/index.html](https://www.oracle.com/technetwork/java/javase/downloads/index.html) for instructions.
 * Docker - see [https://www.docker.com/get-started](https://www.docker.com/get-started) for instructions.
-* InelliJ IDEA installed. Choose the Community version from the download link [IntelliJ Idea](https://www.jetbrains.com/idea/download)
+* IntelliJ IDEA installed. Choose the Community version from the download link [IntelliJ Idea](https://www.jetbrains.com/idea/download)
 * Optional: Git installed - see [https://git-scm.com/](https://git-scm.com/) for instructions.
 
 
