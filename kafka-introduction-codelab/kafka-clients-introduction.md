@@ -25,10 +25,16 @@ Duration: 10:00
 
 * Internet connectivity
 * Java SKD installed - see [https://www.oracle.com/technetwork/java/javase/downloads/index.html](https://www.oracle.com/technetwork/java/javase/downloads/index.html) for instructions.
-* Docker - see [https://www.docker.com/get-started](https://www.docker.com/get-started) for instructions.
+* Docker - see [https://www.docker.com/get-started](https://www.docker.com/get-started) for instructions. NB! Docker on Windows VDI requires virtualization, see [Docker on Windows VDI requires virtualization](#Docker-on-Windows-VDI-requires-virtualization)
 * IntelliJ IDEA installed. Choose the Community version from the download link [IntelliJ Idea](https://www.jetbrains.com/idea/download)
 * Optional: Git installed - see [https://git-scm.com/](https://git-scm.com/) for instructions.
 
+
+#### Docker on Windows VDI requires virtualization 
+* To be able to run the Docker daemon that comes with Docker Desktop (formerly known as Docker For Windows) in Nav's Windows virtual machine images we need to enable virtualization (Hyper-V) in the image.
+* You can ask to have virtualization enabled in the Slack channel #tech_virtualisering. You need to provide the name of the virtual machine, which you will find from within the image > Windows > Kontrollpanel > System og sikkerhet > System. Enabling virtualization requires reboot of the image.
+* Verify by opening Windows > Aktiver eller deaktiver Windows-funksjoner, find "Hyper-V" and see that all it's checkboxes are enabled.
+ 
 
 ## Set up
 Duration: 10:00
