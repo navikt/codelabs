@@ -31,21 +31,26 @@ Duration: 10:00
 
 
 ## Set up
-Duration: 5:00
+Duration: 10:00
 
 ### Java and project setup
 
-[Download project](https://github.com/navikt/codelab-kafka-clients/archive/master.zip)
+* [Download project](https://github.com/navikt/codelab-kafka-clients/archive/master.zip)
+* Extract the project to a directory. 
 
-Extract the project to a directory. An alternative, use git to clone the project. 
-(On NAV developer image you will need add proxy by running ```git config --global http.proxy http://webproxy-utvikler.nav.no:8088``` first)
-``` bash
+
+As an alternative, use git to clone the project:
+```@bash
 git clone https://github.com/navikt/codelab-kafka-clients.git
 ```
+(On NAV developer image you will need add proxy by running `git config --global http.proxy http://webproxy-utvikler.nav.no:8088` first)
+
+### Gradle
+
 
 In project root, run gradle:
 
-``` bash
+```@bash
 $ cd codelab-kafka-clients
 $ ./gradlew --offline build
 ```
@@ -63,10 +68,7 @@ If everything is set up you should see
 BUILD SUCCESSFUL in Xs
 ```
 
-Negative
-: On NAV developer image: If you get an `Connection refused` error when executing gradle.
-
-Add a file named `gradle.properties` in an folder named `.gradle` in your home directory with the following content:
+On NAV developer image: If you get an `Connection refused` error when executing gradle, add a file named `gradle.properties` in an folder named `.gradle` in your home directory with the following content:
 
 ```@bash
 systemProp.proxySet=true
@@ -84,7 +86,7 @@ Linux and Mac: `~/.gradle/gradle.properties`
 
 In the project directory, there is a `docker-compose.yml` file, navigate to the file and run docker-compose:
 
-``` bash
+```@bash
 $ docker-compose up
 ```
 

@@ -45,12 +45,17 @@
 
       </google-codelab-step>
     
-      <google-codelab-step label="Set up" duration="5">
+      <google-codelab-step label="Set up" duration="10">
         <h2>Java and project setup</h2>
-<p><a href="https://github.com/navikt/codelab-kafka-clients/archive/master.zip" target="_blank">Download project</a></p>
-<p>Extract the project to a directory. An alternative, use git to clone the project.<br>(On NAV developer image you will need add proxy by running <code>git config --global http.proxy http://webproxy-utvikler.nav.no:8088</code> first)</p>
+<ul>
+<li><a href="https://github.com/navikt/codelab-kafka-clients/archive/master.zip" target="_blank">Download project</a></li>
+<li>Extract the project to a directory.</li>
+</ul>
+<p>As an alternative, use git to clone the project:</p>
 <pre><code>git clone https://github.com/navikt/codelab-kafka-clients.git
 </code></pre>
+<p>(On NAV developer image you will need add proxy by running <code>git config --global http.proxy http://webproxy-utvikler.nav.no:8088</code> first)</p>
+<h2>Gradle</h2>
 <p>In project root, run gradle:</p>
 <pre><code>$ cd codelab-kafka-clients
 $ ./gradlew --offline build
@@ -62,9 +67,7 @@ $ gradlew.bat --offline build
 <p>If everything is set up you should see</p>
 <pre><code>BUILD SUCCESSFUL in Xs
 </code></pre>
-<aside class="warning"><p>On NAV developer image: If you get an <code>Connection refused</code> error when executing gradle.</p>
-</aside>
-<p>Add a file named <code>gradle.properties</code> in an folder named <code>.gradle</code> in your home directory with the following content:</p>
+<p>On NAV developer image: If you get an <code>Connection refused</code> error when executing gradle, add a file named <code>gradle.properties</code> in an folder named <code>.gradle</code> in your home directory with the following content:</p>
 <pre><code>systemProp.proxySet=true
 systemProp.http.proxyHost=webproxy-utvikler.nav.no
 systemProp.http.proxyPort=8088
