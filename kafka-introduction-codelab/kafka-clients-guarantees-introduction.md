@@ -204,7 +204,30 @@ Duration: 10:00
 `PoststedCounter` is not safe and will throw an exception in certain circumstances. Our consumer is currently configured to autocommit offsets after topic reads. We need to take control over when we do commit in order to not "loose" messages. 
 
 1. Disable `autocommit`: `properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false"); // disable auto commit of offsets` 
-2. Add `navBesøkConsumer.commitSync()` after the `for(Consu...` loop
+2. Create an "record consumed counter": `Integer consumedCounter = 0;` outside the while loop
+3. Add `navBesøkConsumer.commitSync()` after the `for(Consu...` loop, and inside an if statement checking `consumedCounter` against `records.count()`
+
+Something like:
+
+````@java
+        int consumedCounter = 0;
+        while (true) {
+            ConsumerRecords<String, String> records = navBesøkConsumer.poll(Duration.ofMillis(100));
+            for (ConsumerRecord<String, String> record : records) {
+                Poststed poststed = new Gson().newBuilder().create().fromJson(record.value(), Poststed.class);
+                counter.count(poststed);
+                consumedCounter++;
+            }
+            if(consumedCounter == records.count()){ 
+                if (!records.isEmpty()) {
+                    navBesøkConsumer.commitSync();
+                    LOG.info("Top three -> {}", counter.getTopThreeCount());
+                    consumedCounter = 0;
+                }
+            }
+
+        }
+````
 
 ### Optional: Produce top three areas to a new topic
 

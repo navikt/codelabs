@@ -191,8 +191,28 @@ systemProp.https.proxyPort=8088
         <p><code>PoststedCounter</code> is not safe and will throw an exception in certain circumstances. Our consumer is currently configured to autocommit offsets after topic reads. We need to take control over when we do commit in order to not &#34;loose&#34; messages.</p>
 <ol type="1">
 <li>Disable <code>autocommit</code>: <code>properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, &#34;false&#34;); // disable auto commit of offsets</code></li>
-<li>Add <code>navBesøkConsumer.commitSync</code>() after the <code>for(Consu...</code> loop</li>
+<li>Create an &#34;record consumed counter&#34;: <code>Integer consumedCounter = 0;</code> outside the while loop</li>
+<li>Add <code>navBesøkConsumer.commitSync</code>() after the <code>for(Consu...</code> loop, and inside an if statement checking <code>consumedCounter</code> against <code>records.count()</code></li>
 </ol>
+<p>Something like:</p>
+<pre><code>        int consumedCounter = 0;
+        while (true) {
+            ConsumerRecords&lt;String, String&gt; records = navBesøkConsumer.poll(Duration.ofMillis(100));
+            for (ConsumerRecord&lt;String, String&gt; record : records) {
+                Poststed poststed = new Gson().newBuilder().create().fromJson(record.value(), Poststed.class);
+                counter.count(poststed);
+                consumedCounter++;
+            }
+            if(consumedCounter == records.count()){ 
+                if (!records.isEmpty()) {
+                    navBesøkConsumer.commitSync();
+                    LOG.info(&#34;Top three -&gt; {}&#34;, counter.getTopThreeCount());
+                    consumedCounter = 0;
+                }
+            }
+
+        }
+</code></pre>
 <h2>Optional: Produce top three areas to a new topic</h2>
 <p>Create an producer that produces &#34;top three areas&#34; to an topic.</p>
 
