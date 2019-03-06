@@ -1,0 +1,233 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>Kafka-clients introduction</title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../elements/codelab.html">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <style is="custom-style">
+    body {
+      font-family: "Roboto",sans-serif;
+      background: var(--google-codelab-background, #F8F9FA);
+    }
+  </style>
+  
+</head>
+<body unresolved class="fullbleed">
+
+  <google-codelab title="Kafka-clients introduction"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="Overview of the tutorial" duration="10">
+        <p>This tutorial shows you how to create a Kafka-consumer and -producer using <a href="http://kafka.apache.org/documentation/#api" target="_blank">kafka-clients</a> java library.</p>
+<p>What you&#39;ll learn</p>
+<ul>
+<li>How to create a Kafka &#34;safe&#34; producer that produce data from a Kafka-broker</li>
+<li>How to create a Kafka &#34;safe&#34; consumer that reads data from a Kafka-broker</li>
+</ul>
+<aside class="special"><p>This tutorial requires that you are familiar with Java programming language.</p>
+</aside>
+<h2>Prerequisites</h2>
+<ul>
+<li>Internet connectivity</li>
+<li>Java SKD installed - see <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank">https://www.oracle.com/technetwork/java/javase/downloads/index.html</a> for instructions.</li>
+<li>Docker - see <a href="https://www.docker.com/get-started" target="_blank">https://www.docker.com/get-started</a> for instructions. NB! Docker on Windows VDI requires virtualization, see Docker on Windows VDI requires virtualization</li>
+<li>IntelliJ IDEA installed. Choose the Community version from the download link <a href="https://www.jetbrains.com/idea/download" target="_blank">IntelliJ Idea</a></li>
+<li>Optional: Git installed - see <a href="https://git-scm.com/" target="_blank">https://git-scm.com/</a> for instructions.</li>
+</ul>
+<h3>Docker on Windows VDI requires virtualization</h3>
+<ul>
+<li>To be able to run the Docker daemon that comes with Docker Desktop (formerly known as Docker For Windows) in Nav&#39;s Windows virtual machine images we need to enable virtualization (Hyper-V) in the image.</li>
+<li>You can ask to have virtualization enabled in the Slack channel #tech_virtualisering. You need to provide the name of the virtual machine, which you will find from within the image &gt; Windows &gt; Kontrollpanel &gt; System og sikkerhet &gt; System. Enabling virtualization requires reboot of the image.</li>
+<li>Verify by opening Windows &gt; Aktiver eller deaktiver Windows-funksjoner, find &#34;Hyper-V&#34; and see that all it&#39;s checkboxes are enabled.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Set up" duration="10">
+        <h2>Java and project setup</h2>
+<ul>
+<li><a href="https://github.com/navikt/kafka-clients-guarantees-codelab/archive/master.zip" target="_blank">Download project</a></li>
+<li>Extract the project to a directory.</li>
+</ul>
+<p>As an alternative, use git to clone the project:</p>
+<pre><code>git clone https://github.com/navikt/kafka-clients-guarantees-codelab.git
+</code></pre>
+<p>(On NAV developer image you will need add proxy by running <code>git config --global http.proxy http://webproxy-utvikler.nav.no:8088</code> first)</p>
+<h2>Gradle</h2>
+<p>In project root, run gradle:</p>
+<pre><code>$ cd codelab-kafka-clients  
+$ ./gradlew --offline build
+</code></pre>
+<p>or on Windows:</p>
+<pre><code>$ cd codelab-kafka-clients
+$ gradlew.bat --offline build
+</code></pre>
+<p>If everything is set up you should see</p>
+<pre><code>BUILD SUCCESSFUL in Xs
+</code></pre>
+<p>On NAV developer image: If you get an <code>Connection refused</code> error when executing gradle, add a file named <code>gradle.properties</code> in an folder named <code>.gradle</code> in your home directory with the following content:</p>
+<pre><code>systemProp.proxySet=true
+systemProp.http.proxyHost=webproxy-utvikler.nav.no
+systemProp.http.proxyPort=8088
+systemProp.https.proxyHost=webproxy-utvikler.nav.no
+systemProp.https.proxyPort=8088
+</code></pre>
+<p>Windows: <code>C:\Users\&lt;username&gt;\.gradle\gradle.properties</code><br>Linux and Mac: <code>~/.gradle/gradle.properties</code></p>
+<h2>Docker</h2>
+<p>In the project directory, there is a <code>docker-compose.yml</code> file, navigate to the file and run docker-compose from the command line:</p>
+<pre><code>$ docker-compose up
+</code></pre>
+<p>This should start Zookeeper and a Kafka instances locally.</p>
+<h2>IntelliJ</h2>
+<ul>
+<li>Open the project in IntelliJ by choosing: <code>File -&gt; New -&gt; Project from Existing sources...</code> navigate to project folder and press OK</li>
+<li>Choose <code>Gradle</code> in next window - Next</li>
+<li>Underneath <code>Global Gradle settings</code> - choose <code>Offline work</code> and hit <code>Finish</code><br></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="NAV Visitor Analysis" duration="3">
+        <p>NavVisitorLocation is a topic produced to Kafka each time a visitor visits the nav.no webpage. Each message is structured as JSON with postal- and  municipality information, example:</p>
+<pre><code>{&#34;postnummer&#34;:&#34;2005&#34;,&#34;stedsnavn&#34;:&#34;RÆLINGEN&#34;,&#34;kommune&#34;:&#34;0228&#34;}
+</code></pre>
+<ol type="1">
+<li>Create a consumer that consumes <code>NavVisitorLocation</code> topic (See NavBesøkProducer.java in the project).</li>
+<li>Track visits per area (stedsnavn)</li>
+<li>Based on area visits, print information of the top three areas that have the highest count.</li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="The NavVisitorLocation topic producer" duration="10">
+        <ul>
+<li>Provided in the project there is a Java class named <code>NavVisitorProducer.java</code>. This class should produce random postal location on a topic named <code>NavVisitorLocation</code> but first we have to create the topic.</li>
+</ul>
+<ol type="1">
+<li>Running the command from the command line: <code>docker run --net host confluentinc/cp-kafka kafka-topics --create  --zookeeper localhost:2181 -topic NavVisitorLocation --replication-factor 3 --partitions 5 --config min.insync.replicas=2</code> will create the topic</li>
+<li>To verify that the topic as been created, we can run: <code>docker run --net host confluentinc/cp-kafka kafka-topics --describe  --zookeeper localhost:2181 -topic NavVisitorLocation</code></li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create an NavVisitorLocation topic consumer" duration="10">
+        <ul>
+<li>In IntelliJ - Create a new Java file, give it a name (e.g. <code>NavVisitorConsumer.java</code>)</li>
+<li>We need to declare a <code>KafkaConsumer</code> and instantiate it;</li>
+</ul>
+<pre><code>public class NavVisitorConsumer {
+
+    private final static String TOPIC = &#34;NavVisitorLocation&#34;;
+    private final static String BOOTSTRAP_SERVERS = &#34;localhost:9092&#34;;
+    private final static Logger LOG = LogManager.getLogger();
+    
+    public static void main(String[] args) {
+        final Properties props = new Properties();
+        props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, &#34;visitor-consumer&#34;);
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+
+        KafkaConsumer&lt;String, String&gt; navBesøkConsumer = new KafkaConsumer&lt;&gt;(props);
+        navBesøkConsumer.subscribe(Collections.singleton(TOPIC));
+
+     
+        while (true) {
+            ConsumerRecords&lt;String, String&gt; records = navBesøkConsumer.poll(Duration.ofMillis(100));
+            for (ConsumerRecord&lt;String, String&gt; record : records) {
+                LOG.info(&#34;Consumed &#34; + record);
+            }
+        }
+    }
+}
+</code></pre>
+<ul>
+<li>We should now be able to consume records from Kafka. Try it out by first start the consumer we just created (Run the main method in IntelliJ) and then start the producer, <code>NavVisitorProducer</code> (Run the main method in IntelliJ). If all looks good, go ahead to the next section.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Track visits per area (stedsnavn)" duration="20">
+        <p>For each record, we increase a counter for that area. <code>PoststedCounter.java</code> have a method <code>count</code> which take a <code>Poststed</code> as an argument and increase a counter by 1 each time a unique <code>Poststed</code> is added.</p>
+<ol type="1">
+<li>First we need to take the record value (JSON) and convert it to an <code>Poststed</code> object:<code>Poststed poststed = new Gson().newBuilder().create().fromJson(record.value(), Poststed.class);</code></li>
+<li>Create an instance of the <code>PoststedCounter</code>: <code>PoststedCounter counter = new PoststedCounter()</code> (outside the while loop)</li>
+<li>Add the parsed <code>Poststed</code> object to the counter: <code>counter.count(poststed);</code></li>
+<li>Print result</li>
+</ol>
+<p>something like:</p>
+<pre><code>        ..... 
+        
+        PoststedCounter counter = new PoststedCounter()
+        while (true) {
+            ConsumerRecords&lt;String, String&gt; records = navBesøkConsumer.poll(Duration.ofMillis(100));
+            for (ConsumerRecord&lt;String, String&gt; record : records) {
+                LOG.info(&#34;Consumed &#34; + record);
+                Poststed poststed = new Gson().newBuilder().create().fromJson(record.value(), Poststed.class);
+                counter.count(poststed);
+            }
+            if(!records.isEmpty()){
+                LOG.info(&#34;Top three -&gt; {}&#34;, counter.getTopThreeCount());
+            }
+        }
+</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Handle Exceptions and safe consumer" duration="10">
+        <p><code>PoststedCounter</code> is not safe and will throw an exception in certain circumstances. Our consumer is currently configured to autocommit offsets after topic reads. We need to take control over when we do commit in order to not &#34;loose&#34; messages.</p>
+<ol type="1">
+<li>Disable <code>autocommit</code>: <code>properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, &#34;false&#34;); // disable auto commit of offsets</code></li>
+<li>Add <code>navBesøkConsumer.commitSync</code>() after the <code>for(Consu...</code> loop</li>
+</ol>
+<h2>Optional: Produce top three areas to a new topic</h2>
+<p>Create an producer that produces &#34;top three areas&#34; to an topic.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-49880327-14', 'auto');
+
+    (function() {
+      var gaCodelab = '0';
+      if (gaCodelab) {
+        ga('create', gaCodelab, 'auto', {name: 'codelab'});
+      }
+
+      var gaView;
+      var parts = location.search.substring(1).split('&');
+      for (var i = 0; i < parts.length; i++) {
+        var param = parts[i].split('=');
+        if (param[0] === 'viewga') {
+          gaView = param[1];
+          break;
+        }
+      }
+      if (gaView && gaView !== gaCodelab) {
+        ga('create', gaView, 'auto', {name: 'view'});
+      }
+    })();
+  </script>
+
+</body>
+</html>
