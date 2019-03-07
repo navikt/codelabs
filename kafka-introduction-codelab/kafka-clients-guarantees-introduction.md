@@ -124,7 +124,7 @@ Duration: 10:00
 
 * Provided in the project there is a Java class named `NavVisitorProducer.java`. This class should produce random postal location on a topic named `NavVisitorLocation` but first we have to create the topic. 
 
-1. Running the command from the command line: `docker run --net host confluentinc/cp-kafka kafka-topics --create  --zookeeper localhost:2181 -topic NavVisitorLocation --replication-factor 3 --partitions 5 --config min.insync.replicas=2` will create the topic
+1. Running the command from the command line: `docker run --net host confluentinc/cp-kafka kafka-topics --create  --zookeeper localhost:2181 -topic NavVisitorLocation --replication-factor 2 --partitions 4` will create the topic
 2. To verify that the topic as been created, we can run: `docker run --net host confluentinc/cp-kafka kafka-topics --describe  --zookeeper localhost:2181 -topic NavVisitorLocation`
 
 
@@ -203,7 +203,8 @@ Duration: 10:00
 
 `PoststedCounter` is not safe and will throw an exception in certain circumstances. Our consumer is currently configured to autocommit offsets after topic reads. We need to take control over when we do commit in order to not "loose" messages. 
 
-1. Disable `autocommit`: `properties.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false"); // disable auto commit of offsets` 
+1. Disable `autocommit`: `props.setProperty(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false"); // disable auto commit of offsets`  
+2. Read earliest messages `props.setProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest"); // disable auto commit of offsets`
 2. Create an "record consumed counter": `Integer consumedCounter = 0;` outside the while loop
 3. Add `navBesøkConsumer.commitSync()` after the `for(Consu...` loop, and inside an if statement checking `consumedCounter` against `records.count()`
 
