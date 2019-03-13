@@ -1,0 +1,247 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+  <link rel="import" href="../elements/codelab.html">
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <style is="custom-style">
+    body {
+      font-family: "Roboto",sans-serif;
+      background: var(--google-codelab-background, #F8F9FA);
+    }
+  </style>
+  
+</head>
+<body unresolved class="fullbleed">
+
+  <google-codelab title=""
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="Overview of the tutorial" duration="10">
+        <p>This tutorial shows you how to create a Kafka-consumer and -producer using <a href="http://kafka.apache.org/documentation/#streamsapi" target="_blank">kafka-streams</a> java library.</p>
+<p>What you&#39;ll learn</p>
+<ul>
+<li>How to use Schema registry and Avro to define a strictly format for Kafka messages</li>
+<li>How to create a Kafka-Streams that reads- , transform and produce data to/from a Kafka-broker</li>
+</ul>
+<aside class="special"><p>This tutorial requires that you are familiar with Java programming language.</p>
+</aside>
+<h2>Prerequisites</h2>
+<ul>
+<li>Internet connectivity</li>
+<li>Java SKD installed (version &gt; 1.8.x) - see <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank">https://www.oracle.com/technetwork/java/javase/downloads/index.html</a> for instructions.</li>
+<li>Docker - see <a href="https://www.docker.com/get-started" target="_blank">https://www.docker.com/get-started</a> for instructions. NB! Docker on Windows VDI requires virtualization, see Docker on Windows VDI requires virtualization</li>
+<li>IntelliJ IDEA installed. Choose the Community version from the download link <a href="https://www.jetbrains.com/idea/download" target="_blank">IntelliJ Idea</a></li>
+<li>Optional: Git installed - see <a href="https://git-scm.com/" target="_blank">https://git-scm.com/</a> for instructions.</li>
+</ul>
+<h3>Docker on Windows VDI requires virtualization</h3>
+<ul>
+<li>To be able to run the Docker daemon that comes with Docker Desktop (formerly known as Docker For Windows) in Nav&#39;s Windows virtual machine images we need to enable virtualization (Hyper-V) in the image.</li>
+<li>You can ask to have virtualization enabled in the Slack channel #tech_virtualisering. You need to provide the name of the virtual machine, which you will find from within the image &gt; Windows &gt; Kontrollpanel &gt; System og sikkerhet &gt; System. Enabling virtualization requires reboot of the image.</li>
+<li>Verify by opening Windows &gt; Aktiver eller deaktiver Windows-funksjoner, find &#34;Hyper-V&#34; and see that all it&#39;s checkboxes are enabled.</li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Set up" duration="10">
+        <h2>Java and project setup</h2>
+<ul>
+<li><a href="https://github.com/navikt/kafka-streams-avro-codelab/archive/master.zip" target="_blank">Download project</a></li>
+<li>Extract the project to a directory.</li>
+</ul>
+<h2>Gradle</h2>
+<p>In project root, run gradle:</p>
+<pre><code>$ cd kafka-streams-avro-codelab
+$ ./gradlew --offline build
+</code></pre>
+<p>or in Windows:</p>
+<pre><code>$ cd kafka-streams-avro-codelab    
+$ gradlew.bat --offline build
+</code></pre>
+<p>If everything is set up you should see</p>
+<pre><code>BUILD SUCCESSFUL in Xs
+</code></pre>
+<p>On NAV developer image: If you get an <code>Connection refused</code> error when executing gradle, add a file named <code>gradle.properties</code> in an folder named <code>.gradle</code> in your home directory with the following content:</p>
+<pre><code>systemProp.proxySet=true
+systemProp.http.proxyHost=webproxy-utvikler.nav.no
+systemProp.http.proxyPort=8088
+systemProp.https.proxyHost=webproxy-utvikler.nav.no
+systemProp.https.proxyPort=8088
+</code></pre>
+<p>Windows: <code>C:\Users\&lt;username&gt;\.gradle\gradle.properties</code><br>Linux and Mac: <code>~/.gradle/gradle.properties</code></p>
+<h2>Docker</h2>
+<p>In the project directory, there is a <code>docker-compose.yml</code> file, navigate to the file and run docker-compose from the command line:</p>
+<pre><code>$ docker-compose up
+</code></pre>
+<p>This should start Zookeeper and a Kafka instances locally.</p>
+<h2>IntelliJ</h2>
+<ul>
+<li>Open the project in IntelliJ by choosing: <code>File -&gt; New -&gt; Project from Existing sources...</code> navigate to project folder and press OK</li>
+<li>Choose <code>Gradle</code> in next window - Next</li>
+<li>Underneath <code>Global Gradle settings</code> - choose <code>Offline work</code> and hit <code>Finish</code></li>
+</ul>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="NAV Visitor Analysis" duration="3">
+        <p>NavVisitorLocation is a topic produced to Kafka each time a visitor visits the nav.no front page. Each message is structured in an AVRO object with postal- and  municipality information, example:</p>
+<pre><code>{&#34;postnummer&#34;:&#34;2005&#34;,&#34;stedsnavn&#34;:&#34;RÆLINGEN&#34;,&#34;kommune&#34;:&#34;0228&#34;}
+</code></pre>
+<ol type="1">
+<li>Create a Kafka stream consumes <code>NavVisitorLocation</code> topic (See NavVisitorProducer.java in the project).</li>
+<li>And count visits per area (stedsnavn)</li>
+<li>Produce the result to an topic named <code>NavVisitorAreaCounter</code></li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="The NavVisitorLocation topic producer" duration="7">
+        <ul>
+<li>Provided in the project there is a Java class named <code>NavVisitorProducer.java</code>. This class should produce random postal location on a topic named <code>NavVisitorLocation</code>.  To get started we need to create Topics.</li>
+</ul>
+<h2>Create topics</h2>
+<ol type="1">
+<li>Create NavVisitorLocation topic: <code>docker run --net host confluentinc/cp-kafka kafka-topics --create  --zookeeper localhost:2181 -topic NavVisitorLocation --replication-factor 1 --partitions 1</code> will create the topic</li>
+<li>To verify that the topic as been created, we can run: <code>docker run --net host confluentinc/cp-kafka kafka-topics --describe  --zookeeper localhost:2181 -topic NavVisitorLocation</code></li>
+<li>Create NavVisitorAreaCounter topic: <code>docker run --net host confluentinc/cp-kafka kafka-topics --create  --zookeeper localhost:2181 -topic NavVisitorAreaCounter --replication-factor 1 --partitions 1</code> will create the topic</li>
+<li>To verify that the topic as been created, we can run: <code>docker run --net host confluentinc/cp-kafka kafka-topics --describe  --zookeeper localhost:2181 -topic NavVisitorAreaCounter</code></li>
+</ol>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Create an kafka-stream app" duration="10">
+        <ol type="1">
+<li>In IntelliJ - Create a new Java file, give it a name (e.g. <code>NavVisitorAreaCounterStream.java</code>)</li>
+<li>Next we need to create kafka stream configuration by copy &amp; paste the code underneath</li>
+</ol>
+<pre><code>public class NavVisitorAreaCounterStream {
+
+    private static final String SCHEMA_REGISTER_URL = &#34;http://localhost:8081/&#34;;
+    private static final String BOOTSTRAP_SERVERS = &#34;localhost:29092&#34;;
+
+    public static void main(String[] args) {
+        final Properties streamsConfiguration = new Properties();
+        // Give the Streams application a unique name.  The name must be unique in the Kafka cluster
+        // against which the application is run (consumer group id).
+        streamsConfiguration.put(StreamsConfig.APPLICATION_ID_CONFIG, &#34;nav-visitor-area-consumer&#34;);
+ 
+       // Where to find kafka brokers
+        streamsConfiguration.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+        // Where to find schema-registry 
+        streamsConfiguration.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTER_URL);
+       
+        // Default (de)serializers for record keys and for record values.
+        streamsConfiguration.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
+        streamsConfiguration.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, SpecificAvroSerde.class);
+         
+    }
+}    
+</code></pre>
+<ul>
+<li>Next step is to create the kafka-stream that consumes <code>NavVisitorAreaCounter</code> topic.</li>
+</ul>
+<ol type="1">
+<li>Define a StreamsBuilder <code>final StreamsBuilder builder = new StreamsBuilder();</code></li>
+<li>Next, create a KStream instance that consumes <code>NavVisitorAreaCounter</code>.</li>
+</ol>
+<pre><code>final StreamsBuilder builder = new StreamsBuilder();
+final KStream&lt;String, Poststed&gt; poststedKStream = builder.stream(&#34;NavVisitorLocation&#34;);
+</code></pre>
+<p>We should now be able to consume records from Kafka.</p>
+<p>Try it out by first start the consumer we just created (Run the main method in IntelliJ) and then start the producer, <code>NavVisitorProducer</code> (Run the main method in IntelliJ).<br>If all looks good, go ahead to the next section.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Track visits per area (stedsnavn)" duration="20">
+        <p>Back to the task, for each record, we like to increase a counter for that area.</p>
+<p>Kafka Streams DSL provides a high-level API for common data transformation operations such as map, filter, join, and aggregations out of the box.<br><br>For this tutorial we are going to use an KTable. A <a href="https://docs.confluent.io/current/streams/concepts.html#ktable" target="_blank">KTable</a> is an abstraction of a changelog stream&lt; from a primary-keyed table.</p>
+<ul>
+<li>Define the KTable by grouping by area name (stedsnavn) and count the occurrences of areas</li>
+</ul>
+<pre><code>   final KTable&lt;String, Long&gt; areaCounts = poststedKStream
+            .groupBy(new KeyValueMapper&lt;String, Poststed, String&gt;() {
+                @Override
+                public String apply(String key, Poststed poststed) {
+                    return poststed.getStedsnavn(); // Group by stedsnavn
+                }
+            })
+            .count(); // Update the table with a count (stedsnavn is primary keyed)
+</code></pre>
+<p>In order to have a peek inside the ktable result we cant add a <code>peek</code> method to <code>areaCounts</code></p>
+<pre><code> areaCounts.toStream().peek(
+            (navn, teller) -&gt; System.out.println(&#34;stedsnavn = [&#34; + navn + &#34;], teller = [&#34; + teller + &#34;]&#34;)
+        );
+</code></pre>
+<p>Try it out by starting the consumer (Run the main method in IntelliJ) and then start the producer.  We should now be able to see area counts in the log message.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Produce visits count back to Kafka" duration="20">
+        <ul>
+<li>Next task is to produce the result to an Kafka stream. First we need to map the count result into our &#34;Resultat&#34; Avro object.</li>
+</ul>
+<pre><code>        areaCounts.toStream().peek(
+            (navn, teller) -&gt; System.out.println(&#34;stedsnavn = [&#34; + navn + &#34;], teller = [&#34; + teller + &#34;]&#34;)
+        ).mapValues(new ValueMapperWithKey&lt;String, Long, Resultat&gt;() {
+            @Override
+            public Resultat apply(String poststed, Long teller) {
+                return new Resultat(poststed, teller); // map to result object
+            }
+        }).to(&#34;NavVisitorAreaCounter&#34;); // produce the result back to Kafka as an stream
+</code></pre>
+<ul>
+<li>(Re-)Start the consumer</li>
+<li>We can verify that the result is produced to Kafka by starting a console Avro consumer.</li>
+</ul>
+<pre><code>docker run --net=host -it confluentinc/cp-schema-registry:latest kafka-avro-console-consumer --bootstrap-server localhost:29092 --property schema.registry.url=http://localhost:8081 --topic NavVisitorAreaCounter
+</code></pre>
+<p>This concludes this tutorial - but feel free to play around with the Kafka Streams API.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-49880327-14', 'auto');
+
+    (function() {
+      var gaCodelab = '0';
+      if (gaCodelab) {
+        ga('create', gaCodelab, 'auto', {name: 'codelab'});
+      }
+
+      var gaView;
+      var parts = location.search.substring(1).split('&');
+      for (var i = 0; i < parts.length; i++) {
+        var param = parts[i].split('=');
+        if (param[0] === 'viewga') {
+          gaView = param[1];
+          break;
+        }
+      }
+      if (gaView && gaView !== gaCodelab) {
+        ga('create', gaView, 'auto', {name: 'view'});
+      }
+    })();
+  </script>
+
+</body>
+</html>

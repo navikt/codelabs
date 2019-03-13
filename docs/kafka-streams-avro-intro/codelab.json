@@ -1,0 +1,27 @@
+{
+  "environment": "web",
+  "source": "kafka-introduction-codelab/kafka-streams-avro-introduction.md",
+  "format": "html",
+  "prefix": "../",
+  "mainga": "UA-49880327-14",
+  "updated": "2019-03-13T22:33:09+01:00",
+  "id": "kafka-streams-avro-intro",
+  "duration": 80,
+  "title": "",
+  "author": "Geir André Lund",
+  "summary": "Kafka-clients introduction codelab.",
+  "theme": "",
+  "status": [
+    "draft"
+  ],
+  "category": [
+    "kafka",
+    "java",
+    "event-driven"
+  ],
+  "tags": [
+    "java"
+  ],
+  "ga": "0",
+  "url": "kafka-streams-avro-intro"
+}
