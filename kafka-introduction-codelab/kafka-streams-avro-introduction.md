@@ -220,6 +220,14 @@ Duration: 20:00
                 return new Resultat(poststed, teller); // map to result object
             }
         }).to("NavVisitorAreaCounter"); // produce the result back to Kafka as an stream
+        
+        // and finally configure and start the stream
+       final KafkaStreams streams = new KafkaStreams(builder.build(), streamsConfiguration);
+
+        streams.cleanUp();
+        streams.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
 ```
 
 * (Re-)Start the consumer

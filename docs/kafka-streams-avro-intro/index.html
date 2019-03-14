@@ -201,6 +201,14 @@ final KStream&lt;String, Poststed&gt; poststedKStream = builder.stream(&#34;NavV
                 return new Resultat(poststed, teller); // map to result object
             }
         }).to(&#34;NavVisitorAreaCounter&#34;); // produce the result back to Kafka as an stream
+        
+        // and finally configure and start the stream
+       final KafkaStreams streams = new KafkaStreams(builder.build(), streamsConfiguration);
+
+        streams.cleanUp();
+        streams.start();
+
+        Runtime.getRuntime().addShutdownHook(new Thread(streams::close));
 </code></pre>
 <ul>
 <li>(Re-)Start the consumer</li>
