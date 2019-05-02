@@ -74,6 +74,8 @@ If everything is set up you should see
 BUILD SUCCESSFUL in Xs
 ```
 
+#### Gradle "connection refused" 
+
 On NAV developer image: If you get an `Connection refused` error when executing gradle, add a file named `gradle.properties` in an folder named `.gradle` in your home directory with the following content:
 
 ```@bash
