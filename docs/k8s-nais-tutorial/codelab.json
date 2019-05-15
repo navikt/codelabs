@@ -1,15 +1,14 @@
 {
   "environment": "web",
-  "source": "k8s-nais-tutorial.md",
   "format": "html",
-  "prefix": "../",
+  "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2018-12-17T13:13:07+01:00",
+  "updated": "2019-05-06T12:10:01+02:00",
   "id": "k8s-nais-tutorial",
   "duration": 52,
   "title": "Kubernetes and NAIS tutorial",
-  "author": "Team Aura",
   "summary": "This tutorial walks you through Kubernetes basics and introduces you to how to deploy on NAIS.",
+  "source": "k8s-nais-tutorial.md",
   "theme": "",
   "status": [
     "draft"

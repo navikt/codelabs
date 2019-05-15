@@ -19,66 +19,58 @@ you.
 ## Prerequisites
 Duration: 3:00
 
-- You must install the [gcloud-sdk](https://cloud.google.com/sdk/docs/downloads-interactive) locally on your machine
-- Access to a NAIS cluster on Google Cloud Platform
+- Docker Desktop for Mac/Windows locally on your machine
+- Enable Kuberentes via Docker Desktop
+- Kubectl
 
 ### Setup
 Duration: 15:00
 
-#### Google Cloud SDK
-Get sa.json file from Vegar or Line.
+#### Docker Desktop for Mac/Windows
+Users working on Mac can download and install the application from https://hub.docker.com/editions/community/docker-ce-desktop-mac
 
-Set up the Google Cloud SDK tool:
-```bash
-gcloud auth activate-service-account --key-file=sa.json
-gcloud config set compute/region europe-north1
-gcloud config set compute/zone europe-north1-a
-gcloud config set core/project nais-dev-gke
-```
+Windows users are recommended to follow the setup from Github: https://github.com/navikt/utvikling/blob/master/Oppsett%20av%20Docker%20p%C3%A5%20Windows%20laptop.md
+
+PS: Windows-users, be sure that you have local admin on your computer
+
+#### Enable Kubernetes locally
+When Docker Desktop is installed, you can follow one of the two tutorials for enabling Kubernetes
+
+* Mac: https://docs.docker.com/docker-for-mac/#kubernetes
+* Windows: https://docs.docker.com/docker-for-windows/#kubernetes
 
 #### Kubectl
-We need to install the Kubernetes command line tool `kubectl`. If you have installed it, skip this step.
-Install through the `gcloud` tool you installed in the first section:
-```bash
-gcloud components install kubectl
-```
-Verify gcloud kubectl is properly installed by issuing `kubectl version`. Output should be something like:
+Kubectl should be installed when enabling Kubernetes. Verify kubectl is properly installed by issuing `kubectl version`.
+
+Output should be something like:
 ```bash
 $ kubectl version
-Client Version: version.Info{Major:"1", Minor:"13", GitVersion:"v1.13.0", GitCommit:"ddf47ac13c1a9483ea035a79cd7c10005ff21a6d", GitTreeState:"clean", BuildDate:"2018-12-03T21:04:45Z", GoVersion:"go1.11.2", Compiler:"gc", Platform:"darwin/amd64"}
-The connection to the server localhost:8080 was refused - did you specify the right host or port?
+Client Version: version.Info{Major:"1", Minor:"14", GitVersion:"v1.14.0", GitCommit:"641856db18352033a0d96dbc99153fa3b27298e5", GitTreeState:"clean", BuildDate:"2019-03-26T00:04:52Z", GoVersion:"go1.12.1", Compiler:"gc", Platform:"darwin/amd64"}
+Server Version: version.Info{Major:"1", Minor:"10", GitVersion:"v1.10.11", GitCommit:"637c7e288581ee40ab4ca210618a89a555b6e7e9", GitTreeState:"clean", BuildDate:"2018-11-26T14:25:46Z", GoVersion:"go1.9.3", Compiler:"gc", Platform:"linux/amd64"}
 ```
-Don't worry about the second line, it just means that we've not connected to a cluster yet.
+
 You can also install `kubectl` using the instructions on the [Kubernetes documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl).
 
 #### (Optional) Shell autocompletion
 If you want to enable shell autocompletion, you need to run the steps described [here](https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion).
 
 #### Access
-You also need access to the Kubernetes cluster:
+Verify that you have gained access to local Kubernetes, and that everything is ready for the next steps:
 ```bash
-gcloud container clusters get-credentials dev-gke
-kubectl config set-context --namespace demo gke_nais-dev-gke_europe-north1-a_dev-gke
+$ kubectl get pods
+No resources found.
 ```
 
-This command will authenticate you against the Kubernetes cluster `nais-dev`.
-Verify that you have gained access by running:
-```bash
-kubectl get pods
-```
-
-It might not output anything, but as long as it doesn't give an error, you are all good.
-
-The command writes to a config file, default `$HOME/.kube/config`, you can take a look at it if you're curious.
+The command uses config written to file, default `$HOME/.kube/config`, you can take a look at it if you're curious.
 
 ## Technologies
 ### Docker
 Duration: 2:00
 
-Docker is a technology that allows us to package an application with it's requirements and basic operating system into a container. Read
-more [here](https://www.docker.com/resources/what-container).  As this tutorials primary focus is kubernetes (which orchestrates
-containers), we will not dive deeper into Docker, but rather use an already existing docker image called echoserver. Echoserver is a simple
-web app that responds with some metadata about it's host and a few key request headers.
+Docker is a technology that allows us to package an application with it's requirements and basic operating system into a container. Read more [here](https://www.docker.com/resources/what-container).
+
+As this tutorials primary focus is kubernetes (which orchestrates containers), we will not dive deeper into Docker, but rather use an already existing docker image called echoserver. Echoserver is a simple web app that responds with some metadata about it's host and a few key request headers.
+
 Echoserver image url: `gcr.io/google-containers/echoserver`
 
 ### Kubernetes
@@ -261,21 +253,21 @@ metadata:
   name: <YOUR_APP>
 spec:
   rules:
-  - host: <YOUR_APP>.demo.dev-gke.nais.io
+  - host: <YOUR_APP>.127.0.0.1.xip.io
     http:
       paths:
       - backend:
           serviceName: <YOUR_APP>
-          servicePort: 80
+          servicePort: 8080
         path: /
 ```
 Notice that we target a service by name here, not labels.
 
 apply it `kubectl apply -f ingress.yaml`
 
-This should enable you to access your echoserver using the following address: `https://<YOUR_APP>.demo.dev-gke.nais.io`, try it out:
+This should enable you to access your echoserver using the following address: `https://<YOUR_APP>.127.0.0.1.xip.io`, try it out:
 ```bash
-curl http://<YOUR_APP>.demo.dev-gke.nais.io
+curl http://<YOUR_APP>.127.0.0.1.xip.io
 ```
 
 ### Enable tls on your app
