@@ -7,6 +7,8 @@ status: draft
 feedback link:
 analytics account: 0
 
+# Kafka streams introduction
+
 ## Overview of the tutorial
 
 This tutorial shows you how to create a Kafka-consumer and -producer using [kafka-streams](http://kafka.apache.org/documentation/#streamsapi) java library.
