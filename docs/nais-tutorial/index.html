@@ -1,0 +1,177 @@
+
+<!doctype html>
+
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+  <meta name="theme-color" content="#4F7DC9">
+  <meta charset="UTF-8">
+  <title>NAIS tutorial</title>
+  <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="..//codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid=""
+                  id="nais-tutorial"
+                  title="NAIS tutorial"
+                  environment="web"
+                  feedback-link="">
+    
+      <google-codelab-step label="About this tutorial" duration="0">
+        <p>This tutorial walks you through NAIS basics and will introduce you to the features that the NAIS platform provides<br>you.</p>
+<h2 is-upgraded>NAIS</h2>
+<p><a href="https://nais.io" target="_blank">NAIS</a> is <a href="https://nav.no" target="_blank">NAV</a>&#39;s application infrastructure platform built to increase development speed by providing our developers at NAV with the best possible tools to develop and run their applications. The platform is  based on Kubernetes and provides additional tools and components that our developers might need.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Prerequisites" duration="15">
+        <ul>
+<li>Docker Desktop for Mac/Windows locally on your machine</li>
+<li>Enable Kuberentes via Docker Desktop</li>
+<li>Kubectl</li>
+</ul>
+<h2 is-upgraded>Setup</h2>
+<h3 is-upgraded>Docker Desktop for Mac/Windows</h3>
+<p>Users working on Mac can download and install the application from <a href="https://hub.docker.com/editions/community/docker-ce-desktop-mac" target="_blank">docker-ce-desktop-mac</a></p>
+<p>Windows users are recommended to follow the setup from Github: <a href="https://github.com/navikt/utvikling/blob/master/Oppsett%20av%20Docker%20p%C3%A5%20Windows%20laptop.md" target="_blank">Oppsett av Docker på Windows laptop</a></p>
+<p>PS: Windows-users, be sure that you have local admin on your computer</p>
+<h3 is-upgraded>Enable Kubernetes locally</h3>
+<p>When Docker Desktop is installed, you can follow one of the two tutorials for enabling Kubernetes</p>
+<ul>
+<li>Mac: https://docs.docker.com/docker-for-mac/#kubernetes</li>
+<li>Windows: https://docs.docker.com/docker-for-windows/#kubernetes</li>
+</ul>
+<h3 is-upgraded>Kubectl</h3>
+<p>Kubectl should be installed when enabling Kubernetes. Verify kubectl is properly installed by issuing <code>kubectl version</code>.</p>
+<p>Output should be something like:</p>
+<pre><code>$ kubectl version
+Client Version: version.Info{Major:&#34;1&#34;, Minor:&#34;14&#34;, GitVersion:&#34;v1.14.0&#34;, GitCommit:&#34;641856db18352033a0d96dbc99153fa3b27298e5&#34;, GitTreeState:&#34;clean&#34;, BuildDate:&#34;2019-03-26T00:04:52Z&#34;, GoVersion:&#34;go1.12.1&#34;, Compiler:&#34;gc&#34;, Platform:&#34;darwin/amd64&#34;}
+Server Version: version.Info{Major:&#34;1&#34;, Minor:&#34;10&#34;, GitVersion:&#34;v1.10.11&#34;, GitCommit:&#34;637c7e288581ee40ab4ca210618a89a555b6e7e9&#34;, GitTreeState:&#34;clean&#34;, BuildDate:&#34;2018-11-26T14:25:46Z&#34;, GoVersion:&#34;go1.9.3&#34;, Compiler:&#34;gc&#34;, Platform:&#34;linux/amd64&#34;}
+</code></pre>
+<p>You can also install <code>kubectl</code> using the instructions on the <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#install-kubectl" target="_blank">Kubernetes documentation</a>.</p>
+<h3 is-upgraded>(Optional) Shell autocompletion</h3>
+<p>If you want to enable shell autocompletion, you need to run the steps described <a href="https://kubernetes.io/docs/tasks/tools/install-kubectl/#enabling-shell-autocompletion" target="_blank">here</a>.</p>
+<h3 is-upgraded>Access</h3>
+<p>Verify that you have gained access to local Kubernetes, and that everything is ready for the next steps:</p>
+<pre><code>$ kubectl get pods
+No resources found.
+</code></pre>
+<p>The command uses config written to file, default <code>$HOME/.kube/config</code>, you can take a look at it if you&#39;re curious.</p>
+<h3 is-upgraded>Load balancer</h3>
+<p>To be able to use ingress locally with Kubernetes for Docker, we need to run a load balancer. Run the following command, and it will (with some magic) start Nginx and use that as the load balancer.</p>
+<pre><code>curl https://raw.githubusercontent.com/navikt/codelabs/master/k8s-nais-tutorial/loadbalancer.yaml | kubectl apply -f -
+</code></pre>
+<p>After the course, you can take a look at the <code>loadbalancer.yaml</code> to see more of how this is set up.</p>
+<p>PS: This will not work if you have other softwars listening to 80⁄433.</p>
+<h3 is-upgraded>Naiserator</h3>
+<p>Naiserator is a Kubernetes operator that handles the lifecycle of the CustomResource called nais.io/Application. The main goal of Naiserator is to simplify application deployment by providing a high-level abstraction tailored for the NAIS-platform.</p>
+<p>Apply the following file to your cluster to start the Naiserator operator.</p>
+<pre><code>kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: naiserator
+  labels:
+    app: naiserator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: naiserator
+  template:
+    metadata:
+      labels:
+        app: naiserator
+    spec:
+      containers:
+      - name: naiserator
+        image: navikt/naiserator:2019-05-24-6b0f733
+        imagePullPolicy: Always
+        env:
+          - name: ACCESS_POLICY_ENABLED
+            value: &#34;false&#34;
+          - name: NAIS_CLUSTER_NAME
+            value: docker-for-desktop
+          - name: NAIS_VAULT_ENABLED
+            value: &#34;false&#34;
+          - name: CERTIFICATE_AUTHORITY_ENABLED
+            value: &#34;false&#34;
+</code></pre>
+<p>After this we need to apply the Application CustomResourceDefinition.</p>
+<pre><code>curl https://raw.githubusercontent.com/nais/naiserator/master/pkg/apis/naiserator/v1alpha1/application.yaml | k apply -f -
+</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="NAIS" duration="5">
+        <p>Write file: <code>app.yaml</code> with contents:</p>
+<pre><code>apiVersion: nais.io/v1alpha1
+kind: Application
+metadata:
+  name: &lt;YOUR_APP&gt;
+  labels:
+    team: workshop
+spec:
+  image: gcr.io/google-containers/echoserver:1.10
+  port: 8080
+  liveness:
+    path: /
+  readiness:
+    path: /
+  env:
+    - name: ENV_NAME
+      value: &#34;value&#34;
+  ingresses: 
+    - &#34;https://&lt;YOUR_APP&gt;.127.0.0.1.xip.io&#34;
+</code></pre>
+<pre><code>kubectl apply -f app.yaml
+</code></pre>
+<p>Take a look at the resources that gets created:</p>
+<pre><code>kubectl get all -l app=YOUR_APP
+</code></pre>
+<p>This command will output all recources that is labeled by <code>app=YOUR_APP</code>. You might need to run this a couple of times to see everthing.</p>
+<h2 is-upgraded>Visit your app</h2>
+<p>Run a new curl to see that your app is running:</p>
+<pre><code>curl http://&lt;YOUR_APP&gt;.127.0.0.1.xip.iox
+</code></pre>
+<h2 is-upgraded>Naiserator</h2>
+<p>Check out the file <a href="https://github.com/nais/naiserator/blob/master/examples/nais-max.yaml" target="_blank">naiserator-max.yaml</a> to see all features and possibilities provided by naiserator.</p>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Clean-up" duration="0">
+        <p>Duration 1:00</p>
+<p>You can delete your app by running:</p>
+<pre><code>kubectl delete application YOUR_APP
+</code></pre>
+
+
+      </google-codelab-step>
+    
+      <google-codelab-step label="Further reading" duration="0">
+        <p>Check out the NAIS documentation at <a href="https://nais.io/doc" target="_blank">https://nais.io/doc</a>.</p>
+
+
+      </google-codelab-step>
+    
+  </google-codelab>
+
+  <script src="..//codelab-elements/native-shim.js"></script>
+  <script src="..//codelab-elements/custom-elements.min.js"></script>
+  <script src="..//codelab-elements/prettify.js"></script>
+  <script src="..//codelab-elements/codelab-elements.js"></script>
+
+</body>
+</html>

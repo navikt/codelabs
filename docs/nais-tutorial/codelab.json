@@ -1,0 +1,19 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "../",
+  "mainga": "UA-49880327-14",
+  "updated": "2019-05-29T11:20:03+02:00",
+  "id": "nais-tutorial",
+  "duration": 23,
+  "title": "NAIS tutorial",
+  "summary": "This tutorial walks you through to how to deploy on NAIS.",
+  "source": "k8s-nais-tutorial/nais.md",
+  "theme": "",
+  "status": [
+    "draft"
+  ],
+  "category": null,
+  "tags": [],
+  "url": "nais-tutorial"
+}

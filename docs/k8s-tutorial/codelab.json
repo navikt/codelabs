@@ -1,0 +1,19 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "../",
+  "mainga": "UA-49880327-14",
+  "updated": "2019-05-29T10:21:57+02:00",
+  "id": "k8s-tutorial",
+  "duration": 47,
+  "title": "Kubernetes tutorial",
+  "summary": "This tutorial walks you through Kubernetes basics",
+  "source": "k8s-nais-tutorial/kubernetes.md",
+  "theme": "",
+  "status": [
+    "draft"
+  ],
+  "category": null,
+  "tags": [],
+  "url": "k8s-tutorial"
+}
