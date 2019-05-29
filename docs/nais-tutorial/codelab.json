@@ -1,7 +1,7 @@
 {
   "environment": "web",
   "format": "html",
-  "prefix": "../",
+  "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
   "updated": "2019-05-29T11:20:03+02:00",
   "id": "nais-tutorial",

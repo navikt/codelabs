@@ -7,20 +7,23 @@
   <meta name="theme-color" content="#4F7DC9">
   <meta charset="UTF-8">
   <title></title>
-  <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
-  <link rel="import" href="../elements/codelab.html">
   <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Source+Code+Pro:400|Roboto:400,300,400italic,500,700|Roboto+Mono">
-  <style is="custom-style">
-    body {
-      font-family: "Roboto",sans-serif;
-      background: var(--google-codelab-background, #F8F9FA);
+  <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://storage.googleapis.com/codelab-elements/codelab-elements.css">
+  <style>
+    .success {
+      color: #1e8e3e;
+    }
+    .error {
+      color: red;
     }
   </style>
-  
 </head>
-<body unresolved class="fullbleed">
-
-  <google-codelab title=""
+<body>
+  <google-codelab-analytics gaid="UA-49880327-14"></google-codelab-analytics>
+  <google-codelab codelab-gaid="0"
+                  id="kafka-streams-avro-intro"
+                  title=""
                   environment="web"
                   feedback-link="">
     
@@ -33,7 +36,7 @@
 </ul>
 <aside class="special"><p>This tutorial requires that you are familiar with Java programming language.</p>
 </aside>
-<h2>Prerequisites</h2>
+<h2 is-upgraded>Prerequisites</h2>
 <ul>
 <li>Internet connectivity</li>
 <li>Java SKD installed (version &gt; 1.8.x) - see <a href="https://www.oracle.com/technetwork/java/javase/downloads/index.html" target="_blank">https://www.oracle.com/technetwork/java/javase/downloads/index.html</a> for instructions.</li>
@@ -41,7 +44,7 @@
 <li>IntelliJ IDEA installed. Choose the Community version from the download link <a href="https://www.jetbrains.com/idea/download" target="_blank">IntelliJ Idea</a></li>
 <li>Optional: Git installed - see <a href="https://git-scm.com/" target="_blank">https://git-scm.com/</a> for instructions.</li>
 </ul>
-<h3>Docker on Windows VDI requires virtualization</h3>
+<h3 is-upgraded>Docker on Windows VDI requires virtualization</h3>
 <ul>
 <li>To be able to run the Docker daemon that comes with Docker Desktop (formerly known as Docker For Windows) in Nav&#39;s Windows virtual machine images we need to enable virtualization (Hyper-V) in the image.</li>
 <li>You can ask to have virtualization enabled in the Slack channel #tech_virtualisering. You need to provide the name of the virtual machine, which you will find from within the image &gt; Windows &gt; Kontrollpanel &gt; System og sikkerhet &gt; System. Enabling virtualization requires reboot of the image.</li>
@@ -52,12 +55,12 @@
       </google-codelab-step>
     
       <google-codelab-step label="Set up" duration="10">
-        <h2>Java and project setup</h2>
+        <h2 is-upgraded>Java and project setup</h2>
 <ul>
 <li><a href="https://github.com/navikt/kafka-streams-avro-codelab/archive/master.zip" target="_blank">Download project</a></li>
 <li>Extract the project to a directory.</li>
 </ul>
-<h2>Gradle</h2>
+<h2 is-upgraded>Gradle</h2>
 <p>In project root, run gradle:</p>
 <pre><code>$ cd kafka-streams-avro-codelab
 $ ./gradlew --offline build
@@ -69,7 +72,7 @@ $ gradlew.bat --offline build
 <p>If everything is set up you should see</p>
 <pre><code>BUILD SUCCESSFUL in Xs
 </code></pre>
-<h3>Gradle &#34;connection refused&#34;</h3>
+<h3 is-upgraded>Gradle &#34;connection refused&#34;</h3>
 <p>On NAV developer image: If you get an <code>Connection refused</code> error when executing gradle, add a file named <code>gradle.properties</code> in an folder named <code>.gradle</code> in your home directory with the following content:</p>
 <pre><code>systemProp.proxySet=true
 systemProp.http.proxyHost=webproxy-utvikler.nav.no
@@ -78,12 +81,12 @@ systemProp.https.proxyHost=webproxy-utvikler.nav.no
 systemProp.https.proxyPort=8088
 </code></pre>
 <p>Windows: <code>C:\Users\&lt;username&gt;\.gradle\gradle.properties</code><br>Linux and Mac: <code>~/.gradle/gradle.properties</code></p>
-<h2>Docker</h2>
+<h2 is-upgraded>Docker</h2>
 <p>In the project directory, there is a <code>docker-compose.yml</code> file, navigate to the file and run docker-compose from the command line:</p>
 <pre><code>$ docker-compose up
 </code></pre>
 <p>This should start Zookeeper and a Kafka instances locally.</p>
-<h2>IntelliJ</h2>
+<h2 is-upgraded>IntelliJ</h2>
 <ul>
 <li>Open the project in IntelliJ by choosing: <code>File -&gt; New -&gt; Project from Existing sources...</code> navigate to project folder and press OK</li>
 <li>Choose <code>Gradle</code> in next window - Next</li>
@@ -110,7 +113,7 @@ systemProp.https.proxyPort=8088
         <ul>
 <li>Provided in the project there is a Java class named <code>NavVisitorProducer.java</code>. This class should produce random postal location on a topic named <code>NavVisitorLocation</code>.  To get started we need to create Topics.</li>
 </ul>
-<h2>Create topics</h2>
+<h2 is-upgraded>Create topics</h2>
 <ol type="1">
 <li>Create NavVisitorLocation topic: <code>docker run --net host confluentinc/cp-kafka kafka-topics --create  --zookeeper localhost:2181 -topic NavVisitorLocation --replication-factor 1 --partitions 1</code> will create the topic</li>
 <li>To verify that the topic as been created, we can run: <code>docker run --net host confluentinc/cp-kafka kafka-topics --describe  --zookeeper localhost:2181 -topic NavVisitorLocation</code></li>
@@ -224,33 +227,10 @@ final KStream&lt;String, Poststed&gt; poststedKStream = builder.stream(&#34;NavV
     
   </google-codelab>
 
-  <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    ga('create', 'UA-49880327-14', 'auto');
-
-    (function() {
-      var gaCodelab = '0';
-      if (gaCodelab) {
-        ga('create', gaCodelab, 'auto', {name: 'codelab'});
-      }
-
-      var gaView;
-      var parts = location.search.substring(1).split('&');
-      for (var i = 0; i < parts.length; i++) {
-        var param = parts[i].split('=');
-        if (param[0] === 'viewga') {
-          gaView = param[1];
-          break;
-        }
-      }
-      if (gaView && gaView !== gaCodelab) {
-        ga('create', gaView, 'auto', {name: 'view'});
-      }
-    })();
-  </script>
+  <script src="https://storage.googleapis.com/codelab-elements/native-shim.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/custom-elements.min.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/prettify.js"></script>
+  <script src="https://storage.googleapis.com/codelab-elements/codelab-elements.js"></script>
 
 </body>
 </html>

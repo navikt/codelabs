@@ -1,15 +1,14 @@
 {
   "environment": "web",
-  "source": "kafka-introduction-codelab/kafka-clients-guarantees-introduction.md",
   "format": "html",
-  "prefix": "../",
+  "prefix": "https://storage.googleapis.com",
   "mainga": "UA-49880327-14",
-  "updated": "2019-05-02T15:48:11+02:00",
+  "updated": "2019-05-03T08:27:58+02:00",
   "id": "kafka-clients-guarantees-intro",
   "duration": 73,
   "title": "Kafka-clients introduction",
-  "author": "Geir André Lund",
   "summary": "Kafka-clients introduction codelab.",
+  "source": "kafka-introduction-codelab/kafka-clients-guarantees-introduction.md",
   "theme": "",
   "status": [
     "draft"
