@@ -6,4 +6,5 @@ Codelabs for NAVIKT - work in progress!
 3. [Kafka streams introduction tutorial - part 3](https://navikt.github.io/codelabs/kafka-streams-avro-intro/)
 4. [Kubernetes tutorial](https://navikt.github.io/codelabs/k8s-tutorial)
 5. [NAIS tutorial](https://navikt.github.io/codelabs/nais-tutorial)
+6. [Kafka introduction tutorial - basics](https://navikt.github.io/codelabs/kafka-introduction/)
 
