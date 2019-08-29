@@ -1,0 +1,19 @@
+{
+  "environment": "web",
+  "format": "html",
+  "prefix": "https://storage.googleapis.com",
+  "mainga": "UA-49880327-14",
+  "updated": "2019-08-29T16:43:54+02:00",
+  "id": "nais-getting-started",
+  "duration": 28,
+  "title": "NAIS tutorial",
+  "summary": "Dette kurset hjelper deg med å komme i gang med NAIS-plattformen",
+  "source": "nais/nais.md",
+  "theme": "",
+  "status": [
+    "draft"
+  ],
+  "category": null,
+  "tags": [],
+  "url": "nais-getting-started"
+}
